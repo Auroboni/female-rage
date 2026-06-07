@@ -1,0 +1,114 @@
+
+/* FONTS */
+
+@font-face {
+  font-family: 'Boldonse';
+  src: url('../fonts/Boldonse/Boldonse-Regular.woff2') format('woff2'),
+       url('../fonts/Boldonse/Boldonse-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('../fonts/Inconsolata/Inconsolata-Regular.woff2') format('woff2'),
+       url('../fonts/Inconsolata/Inconsolata-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Shadows Into Light';
+  src: url('../fonts/Shadows_Into_Light/ShadowsIntoLight.woff2') format('woff2'),
+       url('../fonts/Shadows_Into_Light/ShadowsIntoLight.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Loved by the King';
+  src: url('../fonts/Loved_by_the_King/LovedbytheKing.woff2') format('woff2'),
+       url('../fonts/Loved_by_the_King/LovedbytheKing.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+:root {
+
+  /* ── BACKGROUNDS ── */
+  --bg-white:#EAEBED;   
+  --bg-dark: #333;  
+  --bg-rage: #111;
+
+  /* ── COLORS ── */
+  --color-pink:#D81E5B;/* principal */
+  --color-text:#333;
+  --color-eyebrow: #888;
+
+  /* Colores Rage */
+  --color-yellow:   #D4FF00;
+  --color-purple:   #454ADE;
+  --color-blue:     #02E1FF;
+
+  /* ── FONTS — WEB NORMAL ── */
+
+  --font-titles:'Boldonse', sans-serif;
+  --font-texts:'Inconsolata', monospace;
+  --font-quote:'Shadows Into Light';
+  --font-titles-rage: 'Loved by the King', cursive;
+
+  /* Encabezados */
+  --h1: 60px;
+  --h2: 50px;
+  --h3: 40px;
+  --h4: 32px;
+
+  /* Textos */
+  --text-base: 16px;
+  --text-quote: 28px;
+  --text-tag: 11px;
+
+  /* ── TRANSICIONES ── */
+  --transition-fast: .15s ease;
+  --transition-base: .3s ease;
+  --transition-mode: .5s ease;
+
+  /* ── EFECTOS ── */
+  --glow-pink:    0 0 18px rgba(216, 30, 91, .4);
+  --glow-yellow:  0 0 18px rgba(212, 255, 0, .4);
+  --glow-purple:  0 0 18px rgba(69, 74, 222, .4);
+  --glow-blue:    0 0 18px rgba(2, 225, 255, .4);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   RAGE MODE - se suscriben los valores al activar la clase .rage
+   ═══════════════════════════════════════════════════════════ */
+.rage {
+
+  --color-text:     #FFFFFF;
+
+  /* ── TYPOGRAPHY — RAGE MODE ── */
+  --font-titles:   'Loved by the King', cursive; 
+
+  --h1: 76px;
+  --h2: 70px;
+  --h3: 65px;
+  --h4: 50px;
+
+  /* ── GLOW intensified ── */
+  --glow-pink:    0 0 30px rgba(216, 30, 91, .55),
+                  0 0 60px rgba(216, 30, 91, .3);
+  --glow-yellow:  0 0 30px rgba(212, 255, 0, .55),
+                  0 0 60px rgba(212, 255, 0, .25);
+  --glow-purple:  0 0 30px rgba(69, 74, 222, .6),
+                  0 0 60px rgba(69, 74, 222, .28);
+  --glow-blue:    0 0 30px rgba(2, 225, 255, .6),
+                  0 0 60px rgba(2, 225, 255, .28);
+}
+
+

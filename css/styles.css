@@ -1,0 +1,237 @@
+@import url('reset.css');
+@import url('var.css');
+ 
+
+::selection {
+  background-color: #D81E5B; 
+  color: white;            
+}
+
+/* ── CURSOR ── */
+#cur {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: var(--z-cursor, 9999);
+  transition: width var(--transition-fast),
+              height var(--transition-fast);
+}
+
+#cur.big {
+  width: 30px;
+  height: 30px;
+}
+
+.clean #cur {
+  background: var(--color-pink);
+  mix-blend-mode: difference;
+  transform: translate(-50%,-50%);
+}
+.rage #cur {
+  width: 8px; height: 8px;
+  background: #fff;
+  mix-blend-mode: normal;
+  box-shadow: 0 0 6px rgba(255,255,255,.4);
+  transform: translate(-50%,-50%);
+}
+.rage #cur.big {
+  width: 30px; height: 30px;
+  background: transparent;
+  border: 2px solid var(--color-pink);
+  box-shadow: 0 0 8px var(--color-pink);
+}
+
+/* ── MOBILE: Ocultar cursor personalizado ── */
+@media (max-width: 768px) {
+  #cur {
+    display: none;
+  }
+}
+
+
+/* ════════════════════
+   PROGRESS BAR
+════════════════════ */
+#prog {
+  position: fixed; top:0; left:0;
+  height: 2px; width: 0%;
+  z-index: 8000;
+  transition: background var(--transition-mode);
+}
+.clean #prog { background: var(--color-pink); }
+.rage  #prog { background: linear-gradient(90deg, var(--color-pink), var(--color-yellow), var(--color-blue)); }
+ 
+/* ════════════════════
+   TOGGLE
+════════════════════ */
+#toggle-wrap {
+  position: fixed; top: 1.4rem; right: 1.5rem;
+  z-index: 10000;
+  display: flex; align-items: center; gap: .8rem;
+  opacity: 0; transition: opacity .4s;
+}
+#toggle-wrap.vis { opacity: 1; }
+ 
+.tgl-lbl {
+  font-family: var(--font-texts);
+  font-size: .58rem; letter-spacing: .38em; text-transform: uppercase;
+  transition: color .4s, text-shadow .4s;
+}
+.clean .tgl-lbl   { color: #999; }
+.rage  .tgl-lbl   { color: rgba(255,255,255,.3); }
+.clean .clean-lbl { color: var(--color-text); font-weight: 700; }
+.rage  .rage-lbl  { color: var(--color-pink); font-weight: 700; text-shadow: var(--glow-pink); }
+ 
+#toggle-btn {
+  width: 50px; height: 26px; border-radius: 999px;
+  border: none; outline: none; cursor: pointer; position: relative;
+  transition: background .4s, box-shadow .4s;
+}
+.clean #toggle-btn { background: #ccc; }
+.rage  #toggle-btn { background: var(--color-pink); box-shadow: var(--glow-pink); }
+#toggle-btn::after {
+  content: ''; position: absolute;
+  top: 3px; left: 3px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.rage #toggle-btn::after { transform: translateX(24px); }
+
+
+/* ═══════════════════════════════════════════════════════════
+   LANDING
+   ═══════════════════════════════════════════════════════════ */
+#landing {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background var(--transition-mode);
+}
+ 
+/* Eyebrow — "Female Rage · Cinema" */
+.l-eyebrow {
+  font-family: var(--font-texts);
+  font-size: clamp(.75rem, 1.4vw, .95rem);
+  letter-spacing: .16em; color: #888;
+  color: var(--color-text);
+  letter-spacing: .12em;
+  margin-bottom: clamp(3rem, 3vh, 5rem);
+
+  transition: color var(--transition-mode);
+}
+ 
+/* H1 principal */
+.l-title {
+  font-family: var(--font-titles);
+  font-size: clamp(4rem, 10vw, 18rem);
+  line-height: .88;
+  color: var(--color-pink);
+  letter-spacing: .01em;
+  text-align: center;
+  transform: translateY(30px);
+   transition: text-shadow .4s, font-family var(--transition-mode);
+
+}
+ 
+/* Botón Play */
+.l-btn {
+  margin-top: clamp(2.5rem, 8vh, 4rem);
+  font-family: var(--font-texts);
+  font-size: clamp(.85rem, 1.4vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: .22em;
+  background-color: var(--bg-white);
+  color: var(--color-text);
+  border:  2px solid var(--color-pink) ;
+  padding: .95rem 3rem;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  opacity: 0;
+  transition: background var(--transition-fast),
+              color      var(--transition-fast),
+              border-color var(--transition-fast);
+}
+
+.l-btn:hover {
+  background: var(--color-pink);
+  color: var(--bg-white);
+}
+
+.l-btn * {
+  pointer-events: none;
+}
+
+.l-btn svg {
+  width: 10px;
+  fill: currentColor;
+  transition: transform var(--transition-fast);
+}
+/* ════════════════════
+   Textos
+════════════════════ */
+p {
+  font-family: var(--font-texts);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: 1.9;
+  max-width: 280px; 
+  margin-bottom: 2rem;
+}
+.p-white{
+  color:var(--bg-white);
+}
+.clean .pink-bold,
+.rage .pink-bold,
+.clean strong.pink-bold,
+.rage strong.pink-bold {
+  color: var(--color-pink);
+  font-weight: 800;
+}
+
+/* ════════════════════
+   FOOTER
+════════════════════ */
+footer {
+  background: var(--bg-dark);
+  padding: clamp(1.5rem,3vh,2.5rem) clamp(2rem,6vw,6rem);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transition: background var(--transition-mode);
+}
+
+footer p:last-child {
+  margin-left: auto;
+}
+.rage footer { background: var(--bg-dark); }
+
+footer p {
+  font-family: var(--font-texts);
+  font-size: .85rem;
+  letter-spacing: .14em;
+  color: rgba(250,250,248,.3);
+  transition: color var(--transition-mode);
+}
+
+footer strong {
+  color: var(--color-pink);
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+footer small {
+  font-size: .88rem;
+  opacity: .8;
+  text-align: right;
+}
+
+ 

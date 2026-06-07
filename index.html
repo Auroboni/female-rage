@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HISTERIA - Aurora Bonillo Romera</title>
+
+<!-- CSS -->
+ 
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/var.css">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/timeline.css">
+<link rel="stylesheet" href="css/countdown.css">
+<link rel="stylesheet" href="css/rage-intro.css">
+<link rel="stylesheet" href="css/story-intro.css">
+<link rel="stylesheet" href="css/female-rage-intro.css">
+<link rel="stylesheet" href="css/cine-intro.css">
+<link rel="stylesheet" href="css/catalogo.css">
+<link rel="stylesheet" href="css/actualidad.css">
+<link rel="stylesheet" href="css/catarsis.css">
+<link rel="stylesheet" href="css/canvas-section.css">
+<link rel="stylesheet" href="css/header.css">
+
+
+<!-- Lenis smooth scroll -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Detectar si venimos de la ficha para saltarse el intro */
+  window.skipIntro = new URLSearchParams(window.location.search).get('skip-intro') === 'true';
+</script>
+<!-- P5.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+
+</head>
+<body class="clean">
+ 
+  <!-- ══ ELEMENTOS TÉCNICOS FIJOS ══
+       Decorativos / funcionales. Sin semántica
+       de contenido — se quedan como div. ══ -->
+  <div id="cur" aria-hidden="true"></div>
+  <div id="prog" role="progressbar"></div>
+  <div id="flash"      aria-hidden="true"></div>
+ 
+  <!-- ══ NAV: TOGGLE DE MODO ══
+       Es navegación de interfaz (cambia el
+       modo visual de toda la experiencia). ══ -->
+  <nav id="toggle-wrap">
+    <span class="tgl-lbl clean-lbl"></span>
+    <button id="toggle-btn"></button>
+    <span class="tgl-lbl rage-lbl"> FEEL THE RAGE </span>
+  </nav>
+ 
+  <!-- ══ NAV: DOT NAVIGATION ══
+       Navegación por secciones del timeline. ══ -->
+  <nav id="dot-nav" >
+    <button class="dot on"  data-i="0" ></button>
+    <button class="dot"     data-i="1" ></button>
+    <button class="dot"     data-i="2" ></button>
+    <button class="dot"     data-i="3" ></button>
+    <button class="dot"     data-i="4"></button>
+    <button class="dot"     data-i="5"></button>
+  </nav>
+ 
+  <!-- ══ HEADER: LANDING ══
+       Cabecera principal de la experiencia.
+       Primer elemento que ve el usuario. ══ -->
+  <header id="landing">
+    <p class="l-eyebrow">Female Rage · Cinema</p>
+    <h1 class="l-title">HISTERIA</h1>
+    <button class="l-btn" id="playBtn">
+      Play
+      <svg viewBox="0 0 10 12" aria-hidden="true"><polygon points="0,0 10,6 0,12"/></svg>
+    </button>
+  </header>
+ 
+  <!-- ══ COUNTDOWN ══
+       Elemento de transición cinematográfica.
+       Decorativo — no aporta contenido semántico.
+       aria-hidden para que los lectores de pantalla
+       no lo lean durante la cuenta atrás. ══ -->
+  <div id="countdown" aria-hidden="true">
+ 
+    <div class="film-strip left"  id="fs-left"></div>
+    <div class="film-strip right" id="fs-right"></div>
+    <div class="film-bar top"></div>
+    <div class="film-bar bottom"></div>
+ 
+    <div class="fc-row top">
+      <span class="fc-txt">HISTERIA · 2025</span>
+      <span class="fc-txt">FEMALE RAGE</span>
+    </div>
+    <div class="fc-row bottom">
+      <span class="fc-txt">AUDIO SYNC</span>
+      <span class="fc-txt">24 FPS · 16mm</span>
+      <span class="fc-txt">HDRS-01</span>
+    </div>
+ 
+    <div class="cd-grain"></div>
+    <div class="cd-scan-lines"></div>
+    <div class="cd-vignette"></div>
+    <div class="cd-leak"></div>
+    <div class="cd-colorflash"></div>
+    <div class="cd-flicker" id="cd-flicker"></div>
+    <div class="cd-hscan"></div>
+    <div class="cd-vscratch"></div>
+    <div class="cd-vscratch"></div>
+ 
+    <div class="cd-stage">
+      <div class="cd-ring outer"></div>
+      <div class="cd-ring mid"></div>
+      <div class="cd-ring inner"></div>
+      <svg class="cd-svg" id="cd-svg" viewBox="0 0 200 200">
+        <circle class="cd-svg-bg"   cx="100" cy="100" r="98"/>
+        <circle class="cd-svg-prog" cx="100" cy="100" r="98"
+          id="cd-prog" stroke-dasharray="616" stroke-dashoffset="0"/>
+      </svg>
+      <div class="cd-cross">
+        <div class="cd-corner tl"></div>
+        <div class="cd-corner tr"></div>
+        <div class="cd-corner bl"></div>
+        <div class="cd-corner br"></div>
+      </div>
+      <span class="cd-num" id="cd-num">5</span>
+    </div>
+ 
+    <div class="cd-sublabel">
+      <span>ORIGEN</span>
+      <span id="cd-sub">FADE IN</span>
+      <span>HDRS-01</span>
+    </div>
+ 
+  </div>
+
+  <!-- ══ FEMALE RAGE INTRO — Explicación del concepto ══ -->
+  <section id="female-rage-intro">
+    <div class="fr-hero">
+      <video class="fr-hero-bg" autoplay muted loop playsinline>
+        <source src="video/female rage representation in film I.mp4" type="video/mp4">
+      </video>
+      <div class="fr-hero-content">
+        <div class="fr-label">01 — ¿Qué es el Female Rage?</div>
+        <h1 class="fr-title">Female <span>Rage</span></h1>
+      </div>
+    </div>
+
+    <div class="fr-body">
+        <h3 class="fr-subtitle">La rabia entra en escena</h3>
+        <div class="fr-tags">
+          <div class="fr-tag">Literatura</div>
+          <div class="fr-tag">Pintura</div>
+          <div class="fr-tag">Cine</div>
+        </div>
+        <p class="fr-para">
+          El Female Rage es una <strong class="pink-bold">corriente cultural</strong> que explora la ira femenina como respuesta a la opresión, la desigualdad, la violencia o las expectativas impuestas a las mujeres. Sus raíces atraviesan siglos de literatura y pintura.
+        </p>
+        <p class="fr-para">
+          En la gran pantalla esta corriente ha encontrado su expresión más poderosa. Mediante la venganza, la resistencia o simplemente <strong class="pink-bold">negándose a seguir soportando lo mismo</strong> — hace visible una emoción que durante demasiado tiempo permaneció fuera de escena.
+        </p>
+        <button id="female-rage-btn" class="fr-btn">Comenzar</button>
+    </div>
+  </section>
+
+  <!-- ══ RAGE INTRO — Transición informativa post-female-rage ══
+       Aparece después de female-rage-intro,
+       para avisar al usuario del toggle de modo rage.
+       aria-hidden: contenido puramente decorativo/funcional. ══ -->
+  <div id="rage-intro" aria-hidden="true">
+    <p class="ri-phrase" id="ri-phrase">Do you want to feel the rage?</p>
+    <div class="ri-demo" id="ri-demo">
+      <span class="ri-tgl-txt clean-side">CLEAN</span>
+      <div class="ri-tgl-track">
+        <div class="ri-tgl-thumb"></div>
+      </div>
+      <span class="ri-tgl-txt rage-side">RAGE</span>
+    </div>
+  </div>
+
+  <!-- ══ STORY INTRO — Título a viewport completo ══ -->
+  <div id="story-intro" aria-hidden="true">
+    <div class="si-word">Origen</div>
+  </div>
+
+  <!-- ══ HEADER PRINCIPAL ══ -->
+  <header id="main-header">
+    <div class="header-left">
+      <a href="/" class="header-logo-link">
+        <h1 class="header-logo">HISTERIA</h1>
+      </a>
+    </div>
+
+    <nav class="header-nav" id="header-nav-desktop">
+      <a href="#origen">Origen</a>
+      <a href="#porqueahora">Actualidad</a>
+      <a href="#catalogo">Cartelera</a>
+      <a href="#catarsis">Catarsis</a>
+      <a href="#p5-canvas-wrap">Libertad</a>
+    </nav>
+
+    <button class="header-menu-btn" id="header-menu-btn" aria-label="Menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Mobile Menu -->
+  <nav class="header-mobile-menu" id="header-mobile-menu">
+    <a href="#origen">Origen</a>
+    <a href="#porqueahora">Actualidad</a>
+    <a href="#catalogo">Cartelera</a>
+    <a href="#catarsis">Catarsis</a>
+    <a href="#p5-canvas-wrap">Libertad</a>
+  </nav>
+
+  <!-- ══ TIMELINE HORIZONTAL ══ -->
+  <main id="page">
+
+    <section id="tl-pin">
+      <div id="tl-track">
+        <div class="panel p-intro">
+          <span id="origen" class="tl-eyebrow">02 — El comienzo</span>
+          <h1 class="tl-h1">
+            La historia<br>de nuestra<br><span>rabia<span class="tl-bar" aria-hidden="true"></span></span>
+          </h1>
+          <p class="tl-intro-body">
+            Desde la Antigua Grecia hasta la actualidad. Un recorrido
+            por cómo la rabia femenina ha sido nombrada, diagnosticada,
+            reprimida — y finalmente, reclamada.
+          </p>
+          <div class="tl-scroll-cue" >
+            <div class="tl-scroll-line" aria-hidden="true"></div>
+            <span>Scroll para explorar</span>
+          </div>
+          <div class="tl-prog" role="progressbar" >
+            <div class="tl-prog-fill" id="tlFill"></div>
+          </div>
+        </div>
+ 
+        <!-- ─── ARTICLE: s.IV a.C -->
+        <article class="panel p-sm">
+          <div class="tl-scratch" style="top:34%;background:linear-gradient(90deg,transparent,rgba(216,30,91,.3),transparent)" aria-hidden="true"></div>
+          <span class="tl-ghost" aria-hidden="true">IV</span>
+ 
+          <span class="tl-eyebrow">s.IV a.C</span>
+          <div class="tl-rule" aria-hidden="true"></div>
+          <h2 class="tl-h2">
+            EL ÚTERO <br>ERRANTE
+          </h2>
+          <h3 class="tl-h3">Histeria = útero</h3>
+          <div class="tl-body tl-body--cols">
+            <p>
+              La palabra <strong class="pink-bold"> histeria</strong> viene del griego antiguo
+              ὑστέρα (hystéra): útero. Los antiguos griegos creían que
+              los síntomas de la histeria eran causados por un "útero
+              errante" que se movía por el cuerpo de la mujer, provocando
+              desequilibrios emocionales y físicos.
+            </p>
+            <p>
+              Hipócrates y Platón documentaron esta teoría. La ira, la
+              tristeza, el carácter — todo tenía una explicación
+              anatómica. Todo era el útero.
+            </p>
+          </div>
+        </article>
+ 
+        <!-- ─── ARTICLE: s.XIX ─── -->
+        <article class="panel p-md">
+          <div class="tl-scratch" style="top:55%;background:linear-gradient(90deg,transparent,rgba(212,255,0,.2),transparent)" aria-hidden="true"></div>
+          <span class="tl-ghost" aria-hidden="true">XIX</span>
+ 
+          <span class="tl-eyebrow">s.XIX</span>
+          <div class="tl-rule" aria-hidden="true"></div>
+          <h2 class="tl-h2">
+            DIAGNÓSTICO <br>OFICIAL
+          </h2>
+          <h3 class="tl-h3">Síntomas:</h3>
+ 
+          <div class="tl-cols">
+            <figure class="tl-col-img">
+              <!-- Añadir src con la imagen real -->
+              <img src="img/timeline/histeria-wide.jpg" alt="Fotografías de pacientes diagnosticadas con histeria. Hospital de La Salpêtrière, París, s.XIX." loading="lazy">
+              <figcaption class="tl-img-caption">
+                Mostrar enfado, carácter, desobediencia al marido
+                o simplemente tener opiniones propias.
+              </figcaption>
+            </figure>
+            <div class="tl-col-text">
+              <div class="tl-body">
+                <p>
+                  En el siglo XIX la histeria se convirtió en un
+                  <strong class="pink-bold">diagnóstico médico ampliamente utilizado</strong>.
+                  El tratamiento incluía reposo total, restricción de
+                  actividad intelectual y, en algunos casos,
+                  institucionalización.
+                </p>
+                <p>
+                  El doctor Jean-Martin Charcot fotografiaba a sus
+                  pacientes histéricas en el hospital de La Salpêtrière
+                  en París. Las exhibía como espectáculo científico.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <!-- ─── ARTICLE: Años 60-80 ─── -->
+        <article class="panel p-lg">
+          <div class="tl-scratch" style="top:42%;background:linear-gradient(90deg,transparent,rgba(2,225,255,.25),transparent)" aria-hidden="true"></div>
+          <span class="tl-ghost" aria-hidden="true">60s</span>
+ 
+          <span class="tl-eyebrow">Años 60–80</span>
+          <div class="tl-rule" aria-hidden="true"></div>
+          <h2 class="tl-h2">
+            2ª Ola del <br>feminismo
+          </h2>
+ 
+          <div class="tl-cols">
+            <div class="tl-col-text">
+              <div class="tl-body">
+                <p class="p-white">
+                  La segunda ola del feminismo se vio sustentada por la
+                  <strong class="pink-bold">expresión de la ira como herramienta política</strong>.
+                  La rabia dejó de ser un síntoma — se convirtió en
+                  estrategia. Las feministas de esta época fueron tachadas
+                  de histéricas, locas, iracundas.
+                </p>
+              </div>
+            </div>
+            <figure class="tl-col-img">
+              <img src="img/timeline/ola_feminismo.png" alt="Manifestaciones feministas" loading="lazy">
+            </figure>
+          </div>
+          <blockquote class="tl-quote tl-quote--full">
+            "He alimentado y protegido mi ira feminista como si fuera
+            mi hija."
+            <cite>— Maggie Smith</cite>
+          </blockquote>
+        </article>
+ 
+        <!-- ─── ARTICLE: 1980 ─── -->
+        <article class="panel p-xl">
+          <div class="tl-scratch" style="top:27%;background:linear-gradient(90deg,transparent,rgba(216,30,91,.38),transparent)" aria-hidden="true"></div>
+          <div class="tl-scratch" style="top:70%;background:linear-gradient(90deg,transparent,rgba(216,30,91,.18),transparent)" aria-hidden="true"></div>
+          <span class="tl-ghost" aria-hidden="true">80s</span>
+ 
+          <span class="tl-eyebrow">Año Clave</span>
+          <div class="tl-rule" aria-hidden="true"></div>
+          <h2 class="tl-h2">
+            DEJA DE SER <br>TRASTORNO
+          </h2>
+          <div class="tl-body">
+            <p class="p-white"añade >
+              La histeria, considerada durante dos milenios una enfermedad
+              femenina ligada al "útero errante", fue
+              <strong class="pink-bold">oficialmente retirada de los manuales de trastornos
+              psiquiátricos en 1980</strong>.
+            </p>
+            <p class="p-white">
+              La pregunta que quedó en el aire: ¿y todas las mujeres
+              diagnosticadas? ¿Y las que murieron por este "trastorno"?
+              ¿Y las que fueron recluidas?
+            </p>
+          </div>
+          <span class="tl-year-display" aria-hidden="true">1980</span>
+        </article>
+ 
+        <!-- ─── ARTICLE: MeToo 2017 ─── -->
+        <article class="panel p-xl2">
+          <div class="tl-scratch" style="top:35%;background:linear-gradient(90deg,transparent,rgba(69,74,222,.38),rgba(2,225,255,.15),transparent)" aria-hidden="true"></div>
+          <div class="tl-scratch" style="top:68%;background:linear-gradient(90deg,transparent,rgba(69,74,222,.18),transparent)" aria-hidden="true"></div>
+          <span class="tl-ghost" aria-hidden="true">17</span>
+ 
+          <span class="tl-eyebrow">Viral</span>
+          <div class="tl-rule" aria-hidden="true"></div>
+          <h2 class="tl-h2" style="position:relative">
+            #METOO
+          </h2>
+          <h3 class="tl-h3">La rabia se viraliza</h3>
+ 
+          <div class="tl-cols">
+            <div class="tl-col-text">
+              <div class="tl-body">
+                <p class="p-white">
+                  El movimiento <strong class="pink-bold">#MeToo</strong> se viralizó
+                  globalmente como una campaña en redes sociales para
+                  denunciar el acoso y abuso sexual, impulsado por las
+                  revelaciones contra el productor de Hollywood
+                  Harvey Weinstein.
+                </p>
+                <p class="p-white">
+                  Por primera vez, la rabia colectiva de millones de
+                  mujeres encontró un canal global, simultáneo e
+                  imparable.
+                </p>
+              </div>
+            </div>
+            <figure class="tl-col-img">
+              <img src="img/timeline/metoo.png" alt="Campaña #MeToo en redes sociales, 2017." loading="lazy">
+            </figure>
+          </div>
+ 
+          <span class="tl-year-display" aria-hidden="true">2017</span>
+        </article>
+ 
+      </div><!-- /tl-track -->
+    </section><!-- /tl-pin -->
+
+  <!-- ══ ¿POR QUÉ AHORA? ══ -->
+  <section id="porqueahora">
+
+    <span class="pqa-eyebrow">03 — El auge del Female Rage</span>
+    <h1 class="pqa-title">ACTUALIDAD</h1>
+
+    <figure class="pqa-img-wrap" aria-hidden="true">
+      <img src="img/actualidad/manifestacion-03.png" alt="" loading="lazy">
+    </figure>
+
+    <h2 class="pqa-subtitle">Cuando la ficción refleja la realidad</h2>
+
+    <div class="pqa-body">
+      <div class="pqa-col">
+        <p>No es casualidad que estas historias ocupen hoy nuestras pantallas.</p>
+        <p>Vivimos en una época marcada por tensiones, desigualdades y debates sobre los derechos, el poder y la identidad. La rabia femenina ha dejado de ser un sentimiento que debe ocultarse para convertirse en una  <strong class="pink-bold">conversación colectiva.</strong></p>
+      </div>
+      <div class="pqa-col">
+        <p>Las protagonistas que vemos en pantalla ya no buscan ser agradables ni ejemplares. <strong class="pink-bold">Se equivocan, explotan, se rebelan y desafían</strong> las expectativas impuestas sobre cómo debe comportarse una mujer.</p>
+        <p><span class="pqa-highlight">El cine no crea esta ira.<br>La hace visible.</span></p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══ CINE INTRO — Separador timeline / catálogo ══ -->
+  <div class="cine-wrap">
+    <section id="cine-intro" aria-hidden="true">
+      <div class="ci-word">Cine</div>
+    </section>
+  </div>
+
+  <!-- ══ CATÁLOGO ══ -->
+  <section id="catalogo">
+
+    <div class="cat-header">
+      <span class="cat-eyebrow">04 — El cine</span>
+      <h2 class="cat-title">Cartelera de la furia</h2>
+      <p class="cat-body">
+        Estas películas y series no son solo entretenimiento.
+        Son relatos donde las mujeres dejan de ser observadoras de la historia para convertirse en la fuerza que la transforma. <br>
+        Algunas buscan <strong class="pink-bold">venganza</strong> .<br>
+        Otras <strong class="pink-bold">supervivencia</strong>.<br>
+        Otras simplemente se niegan a seguir soportando lo mismo.<br>
+        Cada una expresa la rabia de una forma distinta.<br>
+        Este es un recorrido por algunas de las obras que han convertido esa emoción en cultura visual.
+      </p>
+    </div>
+
+    <div class="cat-carousel-wrap">
+      <button class="cat-arrow cat-arrow--prev" id="cat-prev" aria-label="Anterior" disabled>←</button>
+
+      <div class="cat-track" id="cat-track">
+
+      <div class="cat-item" data-film="pearl">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/Pearl.jpg" alt="Pearl (2022), Ti West" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/pearl-rage.png" alt="Pearl — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Pearl</span>
+          <span class="cat-film-year">2022</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="killbill">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/killbill.png" alt="Kill Bill (2003), Quentin Tarantino" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/killbill-rage.png" alt="Kill Bill — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Kill Bill</span>
+          <span class="cat-film-year">2003</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="furiosa">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/furiosa.png" alt="Furiosa (2024), George Miller" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/furiosa-rage.png" alt="Furiosa — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Furiosa</span>
+          <span class="cat-film-year">2024</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="sweetpea">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/sweetpea.png" alt="Sweetpea (2024)" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/sweetpea-rage.png" alt="Sweetpea — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Sweetpea</span>
+          <span class="cat-film-year">2024</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="substance">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/the substance.png" alt="The Substance (2024), Coralie Fargeat" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/the substance-rage.png" alt="The Substance — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">The Substance</span>
+          <span class="cat-film-year">2024</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="handmaid">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/handmaid.png" alt="The Handmaid's Tale (2017), Bruce Miller" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/haindmade-rage.png" alt="The Handmaid's Tale — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">The Handmaid's Tale</span>
+          <span class="cat-film-year">2017</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="arcane">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/arcane.png" alt="Arcane (2021), Fortiche Production" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/arcane-rage.png" alt="Arcane — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Arcane</span>
+          <span class="cat-film-year">2021</span>
+        </div>
+      </div>
+
+      <div class="cat-item" data-film="promising">
+        <div class="cat-poster-wrap">
+          <img class="cat-poster cat-poster--clean" src="img/catalogo/promising.png" alt="Promising Young Woman (2020), Emerald Fennell" loading="lazy">
+          <img class="cat-poster cat-poster--rage"  src="img/catalogo/rage-mode/promising-rage.png" alt="Promising Young Woman — versión rage" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="cat-rule" aria-hidden="true"></div>
+        <div class="cat-info">
+          <span class="cat-film-title">Promising Young Woman</span>
+          <span class="cat-film-year">2020</span>
+        </div>
+      </div>
+
+      </div><!-- /cat-track -->
+
+      <button class="cat-arrow cat-arrow--next" id="cat-next" aria-label="Siguiente">→</button>
+    </div><!-- /cat-carousel-wrap -->
+  </section><!-- /catalogo -->
+
+  <!-- ══ CATARSIS ══ -->
+  <section id="catarsis">
+    <div class="cas-header">
+      <p class="cas-eyebrow">05 — La Catarsis</p>
+      <h2 class="cas-title">¿En qué nos ayuda el female rage?</h2>
+      <p class="cas-intro">
+        ¿Por qué nos fascinan estas historias? <br>
+        La respuesta no está solo en el cine. <strong class="pink-bold">Está en nosotros.</strong><br>
+      Ver a una mujer explotar emocionalmente en pantalla <strong class="pink-bold">relaja</strong>.
+      </p>
+    </div>
+
+    <!-- Tres pilares -->
+    <div class="cas-cols-wrap">
+      <div class="cas-col">
+        <div class="cas-col-num">01</div>
+        <div class="cas-col-title">La Katharsis Griega</div>
+        <div class="cas-col-body">
+          Aristóteles llamó <strong class="pink-bold">katharsis</strong> a una purga emocional que experimenta el espectador de una tragedia al <strong class="pink-bold">identificarse con los personajes</strong>, logrando un equilibrio psicológico y moral.
+        </div>
+      </div>
+
+      <div class="cas-col">
+        <div class="cas-col-num">02</div>
+        <div class="cas-col-title">La Emoción Reprimida</div>
+        <div class="cas-col-body">
+          Algunos estudios muestran que la supresión de la ira puede aumentar posteriormente los sentimientos de enfado en mujeres en lugar de hacerla desaparecer.
+        </div>
+      </div>
+
+      <div class="cas-col">
+        <div class="cas-col-num">03</div>
+        <div class="cas-col-title">Neuronas Espejo</div>
+        <div class="cas-col-body">
+          Ver una película no es una experiencia pasiva.
+          El cerebro no distingue entre vivir una emoción y observarla.
+          La pantalla se convierte en un <strong class="pink-bold">espacio seguro donde experimentar emociones intensas</strong> y liberar aquello que muchas veces permanece reprimido.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Testimonio -->
+    <section id="testimonial-section">
+      <div class="testimonial-container">
+        <p class="testimonial-text">
+          "Ver a una mujer enfadada en pantalla no me incomoda. Me hace sentir comprendida."
+        </p>
+        <p class="testimonial-source">
+          - Testimonio recurrente en estudios sobre audiencias de female rage cinema
+        </p>
+      </div>
+    </section>
+  </section>
+
+  <!-- ══ CANVAS SECTION — Interacción final ══ -->
+  <section id="canvas-section">
+    <p class="canvas-eyebrow">06 — Libres</p>
+    <h2 class="canvas-title">Libera tu ira</h2>
+
+    <!-- Canvas interactivo -->
+    <div id="p5-canvas-wrap"></div>
+
+    <!-- Input -->
+    <div class="canvas-input-area">
+      <input
+        id="canvas-rage-input"
+        type="text"
+        maxlength="35"
+        placeholder="Escribe lo que quieres destruir"
+        autocomplete="off"
+      >
+      <button id="canvas-send-btn">DESTRUYE →</button>
+    </div>
+
+    <!-- Historial -->
+    <p class="canvas-history-label">Palabras rotas</p>
+    <div id="canvas-history"></div>
+
+    <!-- Panel de controles -->
+    <div class="canvas-panel">
+      <div class="canvas-panel-title">⚡ Controles</div>
+      <div class="canvas-ctrls">
+
+        <!-- Color -->
+        <div class="canvas-ctrl canvas-ctrl-full">
+          <div class="canvas-clbl" style="margin-bottom: 0.8rem;">Color</div>
+          <div class="canvas-color-opts">
+            <div class="canvas-col-btn active" data-col="#D81E5B" style="background:#D81E5B"></div>
+            <div class="canvas-col-btn" data-col="#02E1FF" style="background:#02E1FF"></div>
+            <div class="canvas-col-btn" data-col="#D4FF00" style="background:#D4FF00"></div>
+            <div class="canvas-col-btn" data-col="#454ADE" style="background:#454ADE"></div>
+            <div class="canvas-col-btn" data-col="#ffffff" style="background:#fff"></div>
+          </div>
+        </div>
+
+        <!-- Intensidad -->
+        <div class="canvas-ctrl canvas-ctrl-full">
+          <div class="canvas-clbl">
+            Intensidad
+            <span id="canvas-val-spd">6</span>
+          </div>
+          <input type="range" id="canvas-spd" min="1" max="10" value="6" step="1">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <p>
+      <strong>HISTERIA</strong> — Trabajo Final de Máster
+    </p>
+    <p>
+      <small>Aurora Bonillo · Programación para Creativos · 2025</small>
+    </p>
+  </footer>
+ 
+  <!-- ══ SCRIPTS ══ -->
+  <script src="js/main.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/timeline.js"></script>
+  <script src="js/landing-flow.js"></script>
+  <script src="js/story-intro.js"></script>
+  <script src="js/female-rage-intro.js"></script>
+  <script src="js/cine-intro.js"></script>
+  <script src="js/rage-intro.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/catalogo.js"></script>
+  <script src="js/actualidad.js"></script>
+  <script src="js/catarsis.js"></script>
+  <script src="js/canvas-section.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+/* CINE INTRO — separador timeline / catálogo */
+
+/* 200vh: 100vh de sección + 100vh de recorrido de animación */
+.cine-wrap {
+  height: 200vh;
+  overflow-x: clip; /* recorta el slide sin romper position:sticky */
+}
+
+/* sticky CSS (no GSAP pin) — inmune a ScrollTrigger.refresh() */
+#cine-intro {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: #EAEBED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ci-word {
+  margin: 0;
+  padding: 0;
+  font-family: 'Boldonse', sans-serif;
+  font-size: clamp(5rem, 9vw, 12rem);
+  color: #D81E5B;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+}
+

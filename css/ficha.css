@@ -1,0 +1,315 @@
+/* ════════════════════════════════════════
+   FICHA.CSS
+   Página de detalle de película.
+   Hereda: reset, var, styles
+   (cursor, prog, toggle, overlays, footer).
+════════════════════════════════════════ */
+
+html { min-height: 100%; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+body.clean { background: var(--bg-white); }
+body.rage  { background: #0a0a0a; }
+
+
+/* ── BACK BUTTON ── */
+.ficha-back {
+  position: fixed;
+  top: 1.45rem; left: 1.5rem;
+  z-index: 10000;
+  font-family: var(--font-texts);
+  font-size: .58rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color var(--transition-base), text-shadow .4s;
+}
+.clean .ficha-back       { color: rgba(51,51,51,.45); }
+.clean .ficha-back:hover { color: var(--color-pink); }
+.rage  .ficha-back       { color: var(--color-pink); text-shadow: var(--glow-pink); }
+.rage  .ficha-back:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,.6); }
+
+/* ════════════════════
+   CONTENT GRID
+════════════════════ */
+.ficha-content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 5fr 3fr 3fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  padding: clamp(2rem, 4vh, 3.5rem) clamp(2rem, 6vw, 5rem);
+  align-items: start;
+  transition: background var(--transition-mode);
+}
+.clean .ficha-content { background: var(--bg-white); }
+.rage  .ficha-content { background: #0a0a0a; }
+
+
+/* ── SINOPSIS ── */
+.ficha-eyebrow {
+  font-family: var(--font-texts);
+  font-size: .58rem;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  display: block;
+  margin:2rem 0 2rem 0;
+}
+.clean .ficha-eyebrow { 
+  color: rgba(51,51,51,.4); 
+}
+.rage  .ficha-eyebrow { 
+  color: var(--color-pink); 
+  text-shadow: var(--glow-pink); 
+}
+
+.ficha-title {
+  font-family: var(--font-titles);
+  font-size: var(--h1);
+  color: var(--color-pink);
+  line-height: 1.4;
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+  transition: font-family var(--transition-mode), text-shadow .4s;
+}
+.rage .ficha-title { text-shadow: var(--glow-pink); }
+
+.ficha-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.ficha-body p {
+  font-family: var(--font-texts);
+  font-size: .82rem;
+  line-height: 1.9;
+  transition: color .4s;
+}
+.clean .ficha-body p { color: rgba(51,51,51,.7); }
+.rage  .ficha-body p { color: rgba(255,255,255,.55); }
+
+
+/* ── QUOTE ── */
+.quote {
+  font-family: var(--font-quote);
+  font-size: var(--text-quote);
+  line-height: 1.4;
+  margin-top: 1.8rem;
+  padding-left: 1.2rem;
+  border-left: 2px solid;
+  max-width: 420px;
+  transition: color .4s, border-color .4s, text-shadow .4s;
+}
+.clean .quote {
+  color: var(--color-text);
+  border-color: var(--color-pink);
+}
+.rage .quote {
+  color: rgba(255,255,255,.85);
+  border-color: var(--color-pink);
+  text-shadow: var(--glow-pink);
+}
+.quote cite {
+  display: block;
+  margin-top: .5rem;
+  font-family: var(--font-texts);
+  font-style: normal;
+  font-size: .65rem;
+  letter-spacing: .2em;
+  opacity: .5;
+}
+
+
+/* ── FICHA TÉCNICA ── */
+.ficha-tecnica {
+  border-left: 2px solid var(--color-blue);
+  padding: 2rem 1.6rem;
+  transition: border-color .4s, box-shadow .4s;
+}
+.rage .ficha-tecnica {
+  box-shadow: -4px 0 18px rgba(2, 225, 255, .22);
+}
+
+.ficha-sec-label {
+  font-family: var(--font-texts);
+  font-size: .58rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1.4rem;
+  padding-bottom: .9rem;
+  transition: color .4s, text-shadow .4s, border-color .4s;
+}
+.clean .ficha-sec-label {
+  color: rgba(51,51,51,.4);
+  border-bottom: 1px solid rgba(51,51,51,.12);
+}
+.rage .ficha-sec-label {
+  color: var(--color-blue);
+  text-shadow: var(--glow-blue);
+  border-bottom: 1px solid rgba(2,225,255,.18);
+}
+
+.ficha-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .55rem 1rem;
+}
+.ficha-dl dt {
+  font-family: var(--font-texts);
+  font-size: .56rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding-top: .1rem;
+  transition: color .4s;
+}
+.clean .ficha-dl dt { color: rgba(51,51,51,.38); }
+.rage  .ficha-dl dt { color: rgba(255,255,255,.28); }
+
+.ficha-dl dd {
+  font-family: var(--font-texts);
+  font-size: .76rem;
+  line-height: 1.5;
+  transition: color .4s;
+}
+.clean .ficha-dl dd { color: var(--color-text); }
+.rage  .ficha-dl dd { color: rgba(255,255,255,.8); }
+
+
+/* ── PÓSTER ── */
+.ficha-poster-col { margin: 0; }
+
+.ficha-poster-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.ficha-poster {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity var(--transition-mode);
+}
+.ficha-poster--clean { position: relative; z-index: 1; }
+.ficha-poster--rage  { position: absolute; inset: 0; z-index: 2; opacity: 0; }
+
+.rage .ficha-poster--clean { opacity: 0; }
+.rage .ficha-poster--rage  { opacity: 1; }
+
+
+/* ════════════════════
+   ARROW NAVIGATION
+════════════════════ */
+.ficha-arrow {
+  position: fixed;
+  bottom: 5rem;
+  z-index: 10000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  padding: 1rem .8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s, color var(--transition-base), text-shadow .4s;
+}
+.ficha-arrow.vis {
+  opacity: 1;
+  pointer-events: all;
+}
+.ficha-arrow--prev { left: 2rem; }
+.ficha-arrow--next { right: 2rem; }
+
+.arrow-sym {
+  font-family: var(--font-texts);
+  font-size: 1.1rem;
+  line-height: 1;
+  display: block;
+  transition: transform .2s ease;
+}
+.ficha-arrow--prev:hover .arrow-sym { transform: translateX(-4px); }
+.ficha-arrow--next:hover .arrow-sym { transform: translateX(4px); }
+
+.arrow-title {
+  font-family: var(--font-texts);
+  font-size: .5rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  max-width: 72px;
+  text-align: center;
+  line-height: 1.5;
+  display: block;
+}
+
+.clean .ficha-arrow       { color: rgba(51,51,51,.35); }
+.clean .ficha-arrow:hover { color: var(--color-pink); }
+
+.rage .ficha-arrow--prev       { color: var(--color-yellow); text-shadow: var(--glow-yellow); }
+.rage .ficha-arrow--prev:hover { color: #fff;                text-shadow: var(--glow-yellow); }
+
+.rage .ficha-arrow--next       { color: var(--color-blue); text-shadow: var(--glow-blue); }
+.rage .ficha-arrow--next:hover { color: #fff;              text-shadow: var(--glow-blue); }
+
+
+/* ════════════════════
+   RESPONSIVE
+════════════════════ */
+@media (max-width: 768px) {
+
+  /* El main no centra verticalmente en móvil */
+  main { align-items: flex-start; }
+
+  /* Contenedor: flex columna en lugar del grid de 3 columnas */
+  .ficha-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: 5rem 1.4rem 3rem;
+
+  }
+
+  /*
+    display:contents hace que los hijos de .ficha-synopsis
+    participen directamente en el flex de .ficha-content,
+    permitiendo reordenarlos entre el póster y la ficha técnica.
+  */
+  .ficha-synopsis { display: contents; }
+
+  /* Orden deseado: eyebrow → título → póster → técnica → descripción → quote */
+  .ficha-eyebrow    { order: 1; margin: 0; }
+  .ficha-title      { order: 2; margin-bottom: 0; font-size: var(--h1); }
+  .ficha-poster-col { order: 3; max-width: 280px; align-self: center; margin: 0; }
+  .ficha-tecnica    { order: 4; border-left: none; border-top: 2px solid var(--color-blue); padding: 1.4rem 0 0; }
+  .ficha-body       { order: 5; }
+  .quote            { order: 6; max-width: 100%; margin-top: 0; }
+
+  /* Rage: ajustar sombra del borde superior de tecnica */
+  .rage .ficha-tecnica { 
+    box-shadow: 0 -4px 18px rgba(2,225,255,.18); 
+  padding:2rem;}
+
+  /* Flechas de navegación: abajo a los lados, sin título de película */
+  .ficha-arrow {
+    display: flex;
+    bottom: 1.2rem;
+    padding: .6rem .9rem;
+  }
+  .ficha-arrow--prev { left: .8rem; }
+  .ficha-arrow--next { right: .8rem; }
+  .arrow-title { display: none; }
+  .arrow-sym { font-size: 1.4rem; }
+}

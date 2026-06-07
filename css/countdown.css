@@ -1,0 +1,105 @@
+
+#countdown {
+  position: fixed; inset: 0;
+  background: #0a0a0a;
+  z-index: 200; opacity: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+ 
+.film-strip {
+  position: absolute; top: 0; bottom: 0; width: 56px;
+  background: #050505;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: space-around;
+  padding: 12px 0; z-index: 2;
+}
+.film-strip.left  { left: 0;  border-right: 1px solid #1a1a1a; }
+.film-strip.right { right: 0; border-left:  1px solid #1a1a1a; }
+.perf { width: 28px; height: 22px; border-radius: 3px; background: #0a0a0a; border: 1px solid #222; flex-shrink: 0; }
+ 
+.film-bar { position: absolute; left: 56px; right: 56px; height: 36px; background: #070707; border: 1px solid #1a1a1a; z-index: 2; }
+.film-bar.top    { top: 0; }
+.film-bar.bottom { bottom: 0; }
+ 
+.fc-row { position: absolute; left: 56px; right: 56px; height: 36px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 3; pointer-events: none; }
+.fc-row.top    { top: 0; }
+.fc-row.bottom { bottom: 0; }
+.fc-txt { font-family: var(--font-texts); font-size: .5rem; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.22); }
+ 
+.cd-grain { position: absolute; left: 56px; right: 56px; top: 36px; bottom: 36px; pointer-events: none; z-index: 10; opacity: .4; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); animation: cdGrain .07s steps(1) infinite; }
+@keyframes cdGrain {
+  0%  { transform:translate(0,0);      opacity:.45; }
+  20% { transform:translate(-2px,1px); opacity:.38; }
+  40% { transform:translate(1px,-2px); opacity:.42; }
+  60% { transform:translate(-1px,2px); opacity:.35; }
+  80% { transform:translate(2px,-1px); opacity:.44; }
+}
+ 
+.cd-scan-lines { position: absolute; left: 56px; right: 56px; top: 36px; bottom: 36px; pointer-events: none; z-index: 9; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.13) 2px, rgba(0,0,0,.13) 4px); }
+ 
+.cd-vignette { position: absolute; left: 56px; right: 56px; top: 36px; bottom: 36px; pointer-events: none; z-index: 8; background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 35%, rgba(0,0,0,.7) 100%); }
+ 
+.cd-leak { position: absolute; left: 56px; top: 36px; bottom: 36px; width: 100px; pointer-events: none; z-index: 7; background: linear-gradient(90deg, rgba(255,200,80,.1), transparent); animation: cdLeak 3.5s ease-in-out infinite alternate; }
+@keyframes cdLeak { from{opacity:.6;transform:translateX(-15px)} to{opacity:1;transform:translateX(8px)} }
+ 
+.cd-colorflash { position: absolute; left: 56px; right: 56px; top: 36px; bottom: 36px; pointer-events: none; z-index: 6; mix-blend-mode: color; animation: cdColor 7s steps(1) infinite; }
+@keyframes cdColor {
+  0%,84%,100%{background:transparent;opacity:0}
+  85%{background:#aa0000;opacity:.35} 86%{background:transparent;opacity:0}
+  90%{background:#000088;opacity:.25} 91%{background:transparent;opacity:0}
+}
+ 
+.cd-flicker { position: absolute; left: 56px; right: 56px; top: 36px; bottom: 36px; pointer-events: none; z-index: 12; background: #fff; opacity: 0; animation: cdFlick .12s steps(1) infinite; }
+@keyframes cdFlick { 0%,93%,100%{opacity:0} 94%{opacity:.05} 95%{opacity:0} 97%{opacity:.03} }
+ 
+.cd-hscan { position: absolute; left: 56px; right: 56px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.2) 30%, rgba(255,255,255,.2) 70%, transparent); pointer-events: none; z-index: 11; animation: cdHscan 5s linear infinite; opacity: 0; }
+@keyframes cdHscan {
+  0%  {top:36px;opacity:0} 3%{opacity:.8} 97%{opacity:.6} 100%{top:calc(100% - 36px);opacity:0}
+}
+ 
+.cd-vscratch { position: absolute; top: 36px; bottom: 36px; width: 1px; pointer-events: none; z-index: 11; animation: cdVscr .18s steps(1) infinite; }
+.cd-vscratch:nth-child(1) { left:calc(56px + 12%); background:rgba(255,255,255,.08); animation-delay:.05s; }
+.cd-vscratch:nth-child(2) { left:calc(56px + 71%); background:rgba(255,255,255,.06); animation-delay:.12s; }
+@keyframes cdVscr { 0%,100%{opacity:0} 35%,65%{opacity:1} }
+ 
+.cd-stage { position: absolute; left:56px; right:56px; top:36px; bottom:36px; display:flex; align-items:center; justify-content:center; z-index:5; }
+ 
+.cd-ring { position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,.1); }
+.cd-ring.outer { width:min(56vw,56vh); height:min(56vw,56vh); }
+.cd-ring.mid   { width:min(32vw,32vh); height:min(32vw,32vh); border-color:rgba(255,255,255,.07); }
+.cd-ring.inner { width:min(18vw,18vh); height:min(18vw,18vh); border-color:rgba(255,255,255,.12); }
+ 
+.cd-svg { position:absolute; width:min(56vw,56vh); height:min(56vw,56vh); transform:rotate(-90deg); }
+.cd-svg-bg   { fill:none; stroke:rgba(255,255,255,.06); stroke-width:1.5; }
+.cd-svg-prog { fill:none; stroke:rgba(255,255,255,.55); stroke-width:1.5; stroke-linecap:butt; }
+ 
+.cd-cross { position:absolute; width:min(56vw,56vh); height:min(56vw,56vh); }
+.cd-cross::before,.cd-cross::after { content:''; position:absolute; background:rgba(255,255,255,.1); }
+.cd-cross::before { width:100%; height:1px; top:50%; left:0; transform:translateY(-50%); }
+.cd-cross::after  { width:1px; height:100%; left:50%; top:0; transform:translateX(-50%); }
+ 
+.cd-corner { position:absolute; width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,.1); }
+.cd-corner.tl{top:0;left:0} .cd-corner.tr{top:0;right:0}
+.cd-corner.bl{bottom:0;left:0} .cd-corner.br{bottom:0;right:0}
+ 
+.cd-num {
+  font-family: var(--font-titles);
+  font-size: min(27vw,27vh);
+  line-height: 1; color: #fff;
+  position: relative; z-index: 2;
+  text-shadow: 0 0 30px rgba(255,255,255,.12);
+  animation: cdNumFlick .1s steps(1) infinite;
+  user-select: none;
+}
+@keyframes cdNumFlick { 0%,100%{opacity:1} 94%{opacity:.82} 96%{opacity:.95} }
+ 
+.cd-sublabel { position:absolute; bottom:calc(36px + 1rem); left:56px; right:56px; display:flex; justify-content:center; gap:3rem; z-index:5; pointer-events:none; }
+.cd-sublabel span { font-family:var(--font-texts); font-size:.5rem; letter-spacing:.3em; text-transform:uppercase; color:rgba(255,255,255,.18); }
+ 
+/* ════════════════════
+   PAGE
+   Oculto hasta showPage()
+════════════════════ */
+#page { width: 100%; visibility: hidden; }
+#page.ready { visibility: visible; }

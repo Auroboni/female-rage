@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HISTERIA — Ficha</title>
+
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/var.css">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/ficha.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body class="clean">
+
+  <div id="cur" aria-hidden="true"></div>
+  <div id="prog" role="progressbar"></div>
+  <nav id="toggle-wrap">
+    <span class="tgl-lbl clean-lbl"></span>
+    <button id="toggle-btn"></button>
+    <span class="tgl-lbl rage-lbl"> FEEL THE RAGE </span>
+  </nav>
+
+  <a href="index.html?skip-intro=true#catalogo" class="ficha-back">← Cartelera</a>
+
+  <button class="ficha-arrow ficha-arrow--prev" id="ficha-prev" aria-label="Película anterior">
+    <span class="arrow-sym">←</span>
+    <span class="arrow-title" id="prev-title"></span>
+  </button>
+  <button class="ficha-arrow ficha-arrow--next" id="ficha-next" aria-label="Película siguiente">
+    <span class="arrow-sym">→</span>
+    <span class="arrow-title" id="next-title"></span>
+  </button>
+
+  <main>
+
+    <!-- ══ CONTENIDO ══ -->
+    <section class="ficha-content">
+
+      <!-- Sinopsis -->
+      <div class="ficha-synopsis">
+        <span class="ficha-eyebrow" id="ficha-eyebrow"></span>
+        <h1 class="ficha-title" id="ficha-title"></h1>
+        <div class="ficha-body" id="ficha-body"></div>
+        <blockquote class="quote" id="ficha-quote"></blockquote>
+      </div>
+
+      <!-- Ficha técnica -->
+      <div class="ficha-tecnica">
+        <span class="ficha-sec-label">Ficha técnica</span>
+        <dl class="ficha-dl" id="ficha-dl"></dl>
+      </div>
+
+      <!-- Póster -->
+      <figure class="ficha-poster-col">
+        <div class="ficha-poster-wrap">
+          <img class="ficha-poster ficha-poster--clean" id="ficha-poster-clean" src="" alt="">
+          <img class="ficha-poster ficha-poster--rage"  id="ficha-poster-rage"  src="" alt="" aria-hidden="true">
+        </div>
+      </figure>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p><strong>HISTERIA</strong> — Trabajo Final de Máster</p>
+    <p>Experiencia digital interactiva sobre <em>female rage</em> y cine.</p>
+    <p><small>Aurora Bonillo · Programación para Creativos · 2025</small></p>
+  </footer>
+
+  <script src="js/ficha.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+/* ════════════════════════════════════════
+   RAGE-INTRO.CSS
+   Pantalla minimalista post-countdown.
+   Fondo liso · frase · toggle animado.
+════════════════════════════════════════ */
+
+#rage-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 195;
+  pointer-events: none;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.2rem;
+  opacity: 0;
+  transition: opacity .5s ease, background .8s ease;
+}
+
+#rage-intro.ri-visible { opacity: 1; }
+
+/* Tinte sutil cuando rage está activo */
+#rage-intro.is-rage {
+  background: #100508;
+}
+
+/* Resplandor radial detrás del toggle */
+#rage-intro::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 45% at 50% 60%,
+    rgba(216, 30, 91, .07), transparent 70%);
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+
+#rage-intro.is-rage::after { opacity: 1; }
+
+/* ── Frase ── */
+.ri-phrase {
+  font-family: var(--font-texts);
+  font-size: clamp(.75rem, 1.4vw, 1rem);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .3);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .5s ease,
+              transform .5s ease,
+              color .7s ease,
+              text-shadow .7s ease,
+              letter-spacing .7s ease;
+}
+
+.ri-phrase.ri-phrase-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#rage-intro.is-rage .ri-phrase {
+  color: rgba(255, 255, 255, .75);
+  text-shadow: 0 0 20px rgba(216, 30, 91, .25);
+  letter-spacing: .3em;
+  animation: ri-glitch .55s steps(1) forwards;
+}
+
+@keyframes ri-glitch {
+  0%   { transform: translate(0);       text-shadow: 0 0 20px rgba(216,30,91,.25); }
+  10%  { transform: translate(-4px, 1px); text-shadow:  5px 0 0 var(--color-pink), -5px 0 0 var(--color-blue); }
+  20%  { transform: translate(4px, -1px); text-shadow: -4px 0 0 var(--color-blue),  4px 0 0 var(--color-yellow); }
+  30%  { transform: translate(-3px, 2px); text-shadow:  4px 0 0 var(--color-yellow), -3px 0 0 var(--color-pink); }
+  40%  { transform: translate(3px, -2px); text-shadow: -5px 0 0 var(--color-pink),  5px 0 0 var(--color-blue); }
+  50%  { transform: translate(-2px, 1px); text-shadow:  3px 0 0 var(--color-blue),  -3px 0 0 var(--color-yellow); }
+  60%  { transform: translate(2px, -1px); text-shadow: -2px 0 0 var(--color-pink),   2px 0 0 var(--color-blue); }
+  70%  { transform: translate(-1px, 0);   text-shadow:  2px 0 0 var(--color-yellow), -2px 0 0 var(--color-pink); }
+  80%  { transform: translate(1px, 1px);  text-shadow: 0 0 20px rgba(216,30,91,.25); }
+  100% { transform: translate(0);         text-shadow: 0 0 20px rgba(216,30,91,.25); }
+}
+
+/* ── Toggle demo ── */
+.ri-demo {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.ri-tgl-txt {
+  font-family: var(--font-texts);
+  font-size: .58rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .2);
+  transition: color .5s ease, text-shadow .5s ease, font-weight .5s ease;
+}
+
+#rage-intro.is-rage .ri-tgl-txt.rage-side {
+  color: var(--color-pink);
+  text-shadow: 0 0 14px rgba(216, 30, 91, .7);
+  font-weight: 700;
+}
+
+/* Track */
+.ri-tgl-track {
+  width: 64px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  position: relative;
+  transition: background .5s ease, box-shadow .5s ease;
+}
+
+#rage-intro.is-rage .ri-tgl-track {
+  background: var(--color-pink);
+  box-shadow: 0 0 24px rgba(216, 30, 91, .6),
+              0 0 55px rgba(216, 30, 91, .2);
+}
+
+/* Thumb */
+.ri-tgl-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+#rage-intro.is-rage .ri-tgl-thumb {
+  transform: translateX(30px);
+}

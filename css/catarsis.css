@@ -1,0 +1,213 @@
+/* ════════════════════════════════════════
+   CATARSIS
+   Sección de impacto emocional del cine
+════════════════════════════════════════ */
+
+#catarsis {
+  background: var(--bg-white);
+  padding: 4rem 2rem;
+  transition: background var(--transition-mode);
+}
+
+.cas-header {
+  max-width: 1400px;
+  margin: 0 auto 4rem;
+}
+
+.cas-eyebrow {
+  font-family: var(--font-texts);
+  font-size: var(--text-tag);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.cas-title {
+  font-family: 'Boldonse', sans-serif;
+  font-size: var(--h2);
+  line-height: 1.5;
+  color: var(--color-pink);
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.cas-intro {
+  max-width: 680px;
+  font-family: var(--font-texts);
+  font-size: clamp(.95rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--color-text);
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.cas-intro strong {
+  color: var(--color-pink);
+  font-weight: 700;
+}
+
+/* ══ TRES COLUMNAS ══ */
+.cas-cols-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 5rem auto;
+}
+
+.cas-col {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.cas-col-num {
+  font-family: 'Boldonse', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--color-eyebrow);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.cas-col-title {
+  font-family: var(--font-texts);
+  font-size: var(--text-tag);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.cas-col-body {
+  font-family: var(--font-texts);
+  font-size: .9rem;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.cas-col-body strong {
+  color: var(--color-pink);
+  font-weight: 700;
+}
+
+/* ══ SECCIÓN DE TESTIMONIO ══ */
+#testimonial-section {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  background: var(--color-pink);
+  padding: clamp(2rem, 4vw, 4rem) clamp(1.5rem, 4vw, 2rem);
+  display: block;
+  overflow: hidden;
+}
+
+.testimonial-container {
+  max-width: clamp(280px, 90vw, 900px);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testimonial-text {
+  font-family: 'Shadows Into Light', serif;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  line-height: 1.6;
+  color: var(--bg-white);
+  margin: 0 0 clamp(1rem, 3vw, 1.5rem) 0;
+  font-weight: 400;
+  letter-spacing: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+.testimonial-source {
+  font-family: 'Inconsolata', monospace;
+  font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+  color: whitesmoke;
+  letter-spacing: 0.05em;
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════
+   RAGE MODE
+════════════════════════════════════════ */
+.rage #catarsis {
+  background: var(--bg-rage);
+}
+
+.rage .cas-eyebrow {
+  color: rgba(255, 255, 255, .25);
+}
+
+.rage .cas-title {
+  color: var(--color-pink);
+  text-shadow: 0 0 20px rgba(216, 30, 91, .3);
+}
+
+.rage .cas-intro {
+  color: rgba(255, 255, 255, .7);
+}
+
+.rage .cas-col-num {
+  color: rgba(255, 255, 255, .08);
+}
+
+.rage .cas-col-title {
+  color: rgba(255, 255, 255, .9);
+}
+
+.rage .cas-col-body {
+  color: rgba(255, 255, 255, .45);
+}
+
+.rage .testimonial-section {
+  background: #1a1a1a;
+}
+
+.rage .testimonial-text {
+  color: rgba(255, 255, 255, .9);
+}
+
+.rage .testimonial-source {
+  color: rgba(255, 255, 255, .5);
+}
+
+.rage .cas-pink-wrap {
+  background: #0d0d0d;
+}
+
+.rage .cas-cta-wrap {
+  background: linear-gradient(135deg, var(--color-pink), #d91055);
+  box-shadow: inset 0 0 60px rgba(216, 30, 91, .15);
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #catarsis {
+    padding: 4rem 1.5rem;
+  }
+
+  .cas-pink,
+  .cas-cta {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .cas-cols-wrap {
+    gap: 2rem;
+    margin: 3rem auto;
+  }
+
+  .cas-pink-wrap,
+  .cas-cta-wrap {
+    padding: 3rem 1.5rem;
+    margin: 3rem 0;
+  }
+}

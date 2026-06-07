@@ -1,0 +1,243 @@
+/* ════════════════════════════════════════
+   CATALOGO.CSS
+   Sección de películas con carrusel.
+   El toggle body.rage cambia los posters
+   y los estilos visuales de la sección.
+════════════════════════════════════════ */
+
+#catalogo {
+  padding: clamp(4rem,8vh,6rem) clamp(2rem,6vw,5rem);
+  overflow: hidden;
+  transition: background var(--transition-mode);
+}
+.clean #catalogo { background: var(--bg-white); }
+.rage  #catalogo { background: var(--bg-rage); }
+
+/* ── HEADER ── */
+.cat-eyebrow {
+  font-family: var(--font-texts);
+  font-size: var(--text-tag);
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+  transition: color .4s, text-shadow .4s;
+}
+.clean .cat-eyebrow { color: rgba(51,51,51,.45); }
+.rage  .cat-eyebrow { color: var(--color-pink); text-shadow: var(--glow-pink); }
+
+.cat-title {
+  font-family: var(--font-titles);
+  font-size: var(--h1);
+  text-transform: uppercase;
+  color: var(--color-pink);
+  line-height: 1;
+  padding-top: 20px;
+  margin-bottom: 1.2rem;
+  transition: font-family var(--transition-mode), text-shadow .4s;
+}
+.rage .cat-title { text-shadow: var(--glow-pink); }
+
+.cat-body {
+  font-family: var(--font-texts);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  max-width: 1400px;
+  margin-bottom: 1.8rem;
+  transition: color .4s;
+}
+.clean .cat-body { color: rgba(51,51,51,.65); }
+.rage  .cat-body { color: rgba(255,255,255,.45); }
+
+.cat-rule {
+  width: 180px;
+  height: 2px;
+  margin-bottom: 2.5rem;
+  transition: background .4s, box-shadow .4s;
+}
+.clean .cat-rule { background: var(--color-blue); }
+.rage  .cat-rule { background: var(--color-blue); box-shadow: var(--glow-blue); }
+
+/* ── WRAPPER + ARROWS ── */
+.cat-carousel-wrap {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.cat-arrow {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-pink);
+  font-family: var(--font-texts);
+  font-size: 2rem;
+  line-height: 1;
+  padding: .8rem .4rem;
+  transition: text-shadow .3s, opacity .3s;
+}
+.cat-arrow:hover           { text-shadow: var(--glow-pink); }
+.rage .cat-arrow           { text-shadow: var(--glow-pink); }
+.cat-arrow[disabled]       { opacity: .2; pointer-events: none; }
+
+
+/* ── CARRUSEL ── */
+.cat-track {
+  flex: 1;
+  display: flex;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: .5rem;
+  cursor: grab;
+  user-select: none;
+}
+.cat-track::-webkit-scrollbar { display: none; }
+.cat-track { scrollbar-width: none; }
+.cat-track.is-dragging { cursor: grabbing; }
+
+/* ── ITEM — 5 visibles a la vez ── */
+.cat-item {
+  flex-shrink: 0;
+  width: calc((100% - 4 * 1.2rem) / 5);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+.cat-track.is-dragging .cat-item { 
+  cursor: grabbing; }
+
+
+/* ── CONTENEDOR DE POSTER ── */
+.cat-poster-wrap {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── POSTERS ── */
+.cat-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity var(--transition-mode), transform .35s ease;
+}
+.cat-poster--clean { 
+  position: relative; 
+  z-index: 1; }
+.cat-poster--rage  { 
+  position: absolute; 
+  inset: 0; 
+  z-index: 2; 
+  opacity: 0; }
+
+/* Toggle de posters */
+.rage .cat-poster--clean { opacity: 0; }
+.rage .cat-poster--rage  { opacity: 1; }
+
+/* Hover — escala poster */
+.cat-item:hover .cat-poster { transform: scale(1.04); }
+
+/* ── RULE POR ITEM ── */
+.cat-item .cat-rule {
+  width: 100%;
+  margin-bottom: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s ease,
+              background .4s, box-shadow .4s;
+}
+.cat-item:hover .cat-rule { 
+  transform: scaleX(1); 
+}
+
+/* ── INFO DEL FILM ── */
+.cat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: .55rem;
+  padding: 0 .1rem;
+}
+.cat-film-title {
+  font-family: var(--font-texts);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  transition: color .4s;
+}
+.cat-film-year {
+  font-family: var(--font-texts);
+  font-size: .58rem;
+  opacity: .5;
+  transition: color .4s;
+}
+.clean .cat-film-title,
+.clean .cat-film-year  { color: var(--color-text); }
+.rage  .cat-film-title { color: #fff; }
+.rage  .cat-film-year  { color: rgba(255,255,255,.5); }
+
+
+/* ════════════════════
+   RESPONSIVE — MOBILE
+   Carrusel horizontal con arrows
+════════════════════ */
+@media (max-width: 768px) {
+
+  #catalogo {
+    padding: clamp(3rem,6vh,4rem) 1.2rem;
+  }
+
+  .cat-title {
+    font-size: clamp(2.2rem, 10vw, 3rem);
+    line-height: 1.5;
+  }
+
+  .cat-body {
+    font-size: .78rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Mostrar arrows en mobile */
+  .cat-arrow {
+    display: block;
+    font-size: 1.5rem;
+    padding: .6rem .3rem;
+  }
+
+  /* Carrusel horizontal: flex */
+  .cat-carousel-wrap {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .cat-track {
+    flex: 1;
+    display: flex;
+    grid-template-columns: unset;
+    gap: 1.2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: .5rem;
+    cursor: grab;
+  }
+
+  .cat-track.is-dragging {
+    cursor: grabbing;
+  }
+
+  /* 2 ítems visibles: (100% - 1 gap) / 2 */
+  .cat-item {
+    flex-shrink: 0;
+    width: calc((100% - 1.2rem) / 2);
+    scroll-snap-align: start;
+  }
+}

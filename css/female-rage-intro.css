@@ -1,0 +1,196 @@
+/* ════════════════════════════════════════
+   FEMALE RAGE INTRO
+   Sección explicativa del concepto
+════════════════════════════════════════ */
+
+#female-rage-intro {
+  background: var(--bg-white);
+  transition: background var(--transition-mode);
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
+}
+
+#female-rage-intro.visible {
+  display: flex;
+  flex-direction: column;
+}
+
+.fr-hero {
+  position: relative;
+  width: 100%;
+  height: 55vh;
+  overflow: hidden;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.fr-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fr-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.fr-title {
+  font-family: var(--font-titles);
+  font-size: var(--h1);
+  color: var(--bg-white);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.fr-title span {
+  color: var(--color-pink);
+}
+
+.fr-label {
+  font-family: var(--font-texts);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--bg-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.fr-subtitle {
+  font-family: var(--font-titles);
+  font-size: var(--h3);
+  color: var(--color-pink);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fr-body {
+  display: flex;
+  width: 100%;
+  height: 45vh;
+  flex-direction: column;
+  padding: 2rem 5rem;
+  gap: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-content: flex-start;
+}
+
+.fr-tags {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.fr-tag {
+  font-family: var(--font-texts);
+  font-size: var(--text-tag);
+  letter-spacing: 0.08em;
+  color: #999;
+  text-transform: uppercase;
+  border-left: 1px solid #ddd;
+  padding-left: 0.75rem;
+}
+
+.fr-para {
+  font-family: var(--font-texts);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0;
+  width: 100%;
+  min-width: 750px;
+}
+
+
+.fr-btn {
+  align-self: flex-start;
+  padding: 0.75rem 2rem;
+  font-family: var(--font-texts);
+  font-size: var(--text-base);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: whitesmoke;
+  background: var(--color-pink);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.fr-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(216, 30, 91, 0.5);
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #female-rage-intro {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+  }
+
+  .fr-hero {
+    height: 30vh;
+    flex-shrink: 0;
+  }
+
+  .fr-body {
+    height: 50vh;
+    padding: 1.5rem;
+    gap: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .fr-hero-content {
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .fr-def {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+  }
+
+  .fr-title {
+    font-size: clamp(1.2rem, 5vw, 1.4rem);
+  }
+
+  .fr-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .fr-para {
+    font-size: 0.8rem;
+      min-width:auto;
+
+  }
+
+  .fr-tag {
+    font-size: clamp(0.6rem, 2vw, 0.7rem);
+  }
+
+  .fr-btn {
+    width: 100%;
+    padding: 0.6rem 1.5rem;
+    font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+    margin-bottom: 1.5rem;
+  }
+}

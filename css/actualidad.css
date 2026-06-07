@@ -1,0 +1,229 @@
+/* ════════════════════════════════════════════════════════════
+   04 — ACTUALIDAD / ¿Por qué ahora?
+   HTML plano: eyebrow · title · figure · h2 · body
+════════════════════════════════════════════════════════════ */
+
+#porqueahora {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg-dark);
+  padding: clamp(4rem, 8vh, 8rem) clamp(2rem, 6vw, 6rem);
+  transition: background var(--transition-mode);
+}
+
+/* ── Imagen: derecha, toda la altura — desktop ── */
+.pqa-img-wrap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 52%;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+}
+
+.pqa-img-wrap img {
+  width: 80%;
+  height: 100%;
+  margin-top: 150px;
+  margin-left: auto;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+
+/* ── Todos los elementos de texto: encima de la imagen, acotados a la izquierda ── */
+.pqa-eyebrow,
+.pqa-subtitle,
+.pqa-body {
+  position: relative;
+  z-index: 2;
+  max-width: 56%;
+}
+
+/* Título: sin límite de ancho, la imagen se superpone por encima (z-index 10) */
+.pqa-title {
+  position: relative;
+  z-index: 2;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* ── Eyebrow ── */
+.pqa-eyebrow {
+  display: block;
+  font-family: var(--font-texts);
+  font-size: clamp(.65rem, 1.1vw, .8rem);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .45);
+  margin-bottom: clamp(1rem, 10vh, 6rem);
+}
+
+/* ── Split text (generado por JS) ── */
+.pqa-title .char-wrap,
+.pqa-title .char,
+.pqa-title .char-space {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+/* ── H1 ACTUALIDAD ── */
+.pqa-title {
+  font-family: var(--font-titles);
+  font-size: clamp(4rem, 10vw, 21rem);
+  line-height: .85;
+  color: var(--color-pink);
+  text-align: left;
+  margin-bottom: clamp(3.5rem, 8vh, 7rem);
+  transition: font-family var(--transition-mode),
+              text-shadow  var(--transition-mode);
+}
+
+/* ── H2 subtítulo ── */
+.pqa-subtitle {
+  font-family: var(--font-titles);
+  font-size: clamp(1.3rem, 2.1vw, 2.8rem);
+  line-height: 1.1;
+  color: rgba(255, 255, 248, .9);
+  margin-bottom: 3rem;
+  transition: font-family var(--transition-mode);
+}
+
+/* ── Párrafos en 2 columnas ── */
+.pqa-body {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.pqa-col {
+  flex: 1;
+}
+
+.pqa-body p {
+  font-family: var(--font-texts);
+  font-size: clamp(.82rem, 1.15vw, .95rem);
+  line-height: 1.85;
+  color: rgba(255, 255, 248, .5);
+  margin: 0 0 .9rem;
+}
+
+/* ── Efecto selección (controlado por JS) ── */
+.pqa-highlight span {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  border-radius: 1px;
+}
+
+/* ════════════════════
+   MOBILE y TABLET
+   Orden natural del DOM: eyebrow → title → img → subtitle → body
+════════════════════ */
+@media (max-width: 1024px) {
+  #porqueahora {
+    min-height: unset;
+    padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  /* Imagen vuelve al flujo, muestra altura completa */
+  .pqa-img-wrap {
+    position: relative;
+    width: 90%;
+    height: auto;
+    margin: 2rem;
+  }
+
+  .pqa-img-wrap img {
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+    margin-top: 0;
+  }
+
+  /* Todos los textos: ancho completo */
+  .pqa-eyebrow,
+  .pqa-title,
+  .pqa-subtitle,
+  .pqa-body {
+    max-width: 100%;
+  }
+
+  /* Título en una sola línea */
+  .pqa-title {
+    font-size: clamp(2rem, 11.5vw, 4rem);
+    white-space: nowrap;
+    margin-bottom: clamp(1.5rem, 3vh, 2.5rem);
+  }
+
+  .pqa-body {
+    flex-direction: column;
+  }
+
+  .pqa-subtitle {
+    font-size: clamp(1.2rem, 5.5vw, 2rem);
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+  }
+}
+
+/* ════════════════════
+   RAGE MODE
+════════════════════ */
+
+.rage #porqueahora {
+  background: #0A0A0A;
+}
+
+.rage .pqa-eyebrow {
+  color: var(--color-yellow);
+  text-shadow: var(--glow-yellow);
+}
+
+.rage .pqa-title {
+  font-size: clamp(6rem, 15vw, 24rem);
+  text-shadow: var(--glow-pink);
+}
+
+.rage .pqa-subtitle {
+  color: var(--color-blue);
+  text-shadow: var(--glow-blue);
+  font-family: 'Boldonse', sans-serif; /* no cambia la tipografía en rage */
+}
+
+/* ── Glitch solo en hover ── */
+.rage .pqa-title:hover {
+  animation: pqa-glitch .5s steps(1) infinite;
+  cursor: none;
+}
+
+@keyframes pqa-glitch {
+  0%  {
+    transform: translate(0);
+    text-shadow: var(--glow-pink);
+  }
+  20% {
+    transform: translate(-3px, 1px);
+    text-shadow: 5px 0 0 var(--color-blue), -5px 0 0 var(--color-yellow);
+  }
+  40% {
+    transform: translate(3px, -1px);
+    text-shadow: -4px 0 0 var(--color-blue), 4px 0 0 var(--color-pink);
+  }
+  60% {
+    transform: translate(-2px, 2px);
+    text-shadow: -3px 0 0 var(--color-yellow), 3px 0 0 var(--color-purple);
+  }
+  80% {
+    transform: translate(1px, -1px);
+    text-shadow: var(--glow-pink);
+  }
+  100% {
+    transform: translate(0);
+    text-shadow: var(--glow-pink);
+  }
+}
+
