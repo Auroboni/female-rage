@@ -87,7 +87,7 @@
 .pqa-subtitle {
   font-family: var(--font-titles);
   font-size: clamp(1.3rem, 2.1vw, 2.8rem);
-  line-height: 1.1;
+  line-height: 1.5;
   color: rgba(255, 255, 248, .9);
   margin-bottom: 3rem;
   transition: font-family var(--transition-mode);
