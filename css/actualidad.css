@@ -74,7 +74,7 @@
 /* ── H1 ACTUALIDAD ── */
 .pqa-title {
   font-family: var(--font-titles);
-  font-size: var(--h1);
+  font-size: clamp(4rem, 10vw, 21rem);
   line-height: .85;
   color: var(--color-pink);
   text-align: left;
@@ -86,7 +86,7 @@
 /* ── H2 subtítulo ── */
 .pqa-subtitle {
   font-family: var(--font-titles);
-  font-size: var(--h2);
+  font-size: clamp(1.3rem, 2.1vw, 2.8rem);
   line-height: 1.1;
   color: rgba(255, 255, 248, .9);
   margin-bottom: 3rem;
