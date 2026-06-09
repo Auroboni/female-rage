@@ -1,9 +1,14 @@
 
 #countdown {
-  position: fixed; inset: 0;
-  background: #0a0a0a;
-  z-index: 200; opacity: 0; pointer-events: none;
-  display: flex; align-items: center; justify-content: center;
+  position: fixed; 
+  inset: 0;
+  background: var(--bg-rage);
+  z-index: 200; 
+  opacity: 0; 
+  pointer-events: none;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   overflow: hidden;
 }
  

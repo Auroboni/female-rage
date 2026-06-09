@@ -26,13 +26,17 @@
 }
 
 .cas-title {
-  font-family: 'Boldonse', sans-serif;
+  font-family: var(--font-titles);
   font-size: var(--h2);
   line-height: 1.5;
   color: var(--color-pink);
   margin-bottom: 2rem;
   opacity: 0;
   transform: translateY(20px);
+  transition: font-family var(--transition-mode);
+}
+.rage .cas-title {
+  font-family: var(--font-titles-rage);
 }
 
 .cas-intro {
@@ -65,11 +69,15 @@
 }
 
 .cas-col-num {
-  font-family: 'Boldonse', sans-serif;
+  font-family: var(--font-titles);
   font-size: clamp(2rem, 5vw, 3rem);
   color: var(--color-eyebrow);
   line-height: 1;
   margin-bottom: 1rem;
+  transition: font-family var(--transition-mode);
+}
+.rage .cas-col-num {
+  font-family: var(--font-titles-rage);
 }
 
 .cas-col-title {
@@ -112,7 +120,7 @@
 }
 
 .testimonial-text {
-  font-family: 'Shadows Into Light', serif;
+  font-family: var(--font-quote);
   font-size: clamp(1.4rem, 4vw, 2.2rem);
   line-height: 1.6;
   color: var(--bg-white);
@@ -124,7 +132,7 @@
 }
 
 .testimonial-source {
-  font-family: 'Inconsolata', monospace;
+  font-family: var(--font-texts);
   font-size: clamp(0.75rem, 1.5vw, 0.9rem);
   color: whitesmoke;
   letter-spacing: 0.05em;

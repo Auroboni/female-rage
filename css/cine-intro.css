@@ -4,6 +4,8 @@
 .cine-wrap {
   height: 200vh;
   overflow-x: clip; /* recorta el slide sin romper position:sticky */
+  background: var(--bg-white);
+  transition: background var(--transition-mode);
 }
 
 /* sticky CSS (no GSAP pin) — inmune a ScrollTrigger.refresh() */
@@ -11,20 +13,49 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  background: #EAEBED;
+  background: var(--bg-white);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background var(--transition-mode);
 }
 
 .ci-word {
   margin: 0;
   padding: 0;
-  font-family: 'Boldonse', sans-serif;
+  font-family: var(--font-titles);
   font-size: clamp(5rem, 9vw, 12rem);
   color: #D81E5B;
   line-height: 1;
   white-space: nowrap;
   user-select: none;
+  transition: font-family var(--transition-mode), text-shadow .4s, color .4s;
+  position: relative;
 }
 
+/* ════════════════════
+   RAGE MODE
+════════════════════ */
+.rage .cine-wrap {
+  background: var(--bg-rage);
+}
+
+.rage #cine-intro {
+  background: var(--bg-rage);
+}
+
+.rage .ci-word {
+  font-family: var(--font-titles-rage);
+  font-size: 200px;
+  color: var(--color-pink);
+  text-shadow: var(--glow-pink);
+  animation: ci-glitch 5.5s steps(1) infinite;
+}
+
+@keyframes ci-glitch {
+  0%,85%   { text-shadow: var(--glow-pink); }
+  86%      { text-shadow: -3px 0 0 var(--color-blue), 3px 0 0 var(--color-yellow); }
+  87%      { text-shadow: var(--glow-pink); }
+  88%      { text-shadow: 3px 0 0 var(--color-yellow), -3px 0 0 var(--color-blue); }
+  89%,100% { text-shadow: var(--glow-pink); }
+}

@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════
-   ACTUALIDAD.JS — #porqueahora
+   ACTUALIDAD.JS — #actualidad
    Carga animaciones solo cuando la sección es visible
 ════════════════════════════════════════ */
 
@@ -7,7 +7,7 @@ let actualidadInitialized = false;
 
 /* Ocultar elementos inicialmente */
 document.addEventListener('DOMContentLoaded', () => {
-  const section = document.getElementById('porqueahora');
+  const section = document.getElementById('actualidad');
   if (!section) return;
 
   const imgWrap = section.querySelector('.pqa-img-wrap');
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.initActualidadAnim = function () {
-  const section    = document.getElementById('porqueahora');
+  const section    = document.getElementById('actualidad');
   if (!section || actualidadInitialized) return;
 
   actualidadInitialized = true;

@@ -13,6 +13,7 @@
   transition: background var(--transition-mode);
 }
 
+
 /* ── Header ── */
 .canvas-eyebrow {
   font-family: var(--font-texts);
@@ -62,7 +63,7 @@
 #canvas-rage-input {
   flex: 1;
   background: var(--bg-white);
-  border: 2px solid #ddd;
+  border: 2px solid whitesmoke;
   border-right: none;
   color: var(--color-text);
   font-family: var(--font-texts);
@@ -189,7 +190,7 @@
 
 .canvas-clbl {
   font-family: var(--font-texts);
-  font-size: .75rem;
+  font-size: var(--text-tag);
   letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--color-eyebrow);
@@ -270,6 +271,7 @@ input[type="range"]#canvas-spd::-moz-range-thumb {
 }
 
 .rage .canvas-title {
+  font-family: var(--font-titles-rage);
   color: var(--color-pink);
   text-shadow: 0 0 20px var(--color-pink);
 }
@@ -282,7 +284,7 @@ input[type="range"]#canvas-spd::-moz-range-thumb {
 .rage #canvas-rage-input {
   background: var(--bg-rage);
   border-color: var(--color-pink);
-  color: #fff;
+  color: whitesmoke;
 }
 
 .rage #canvas-rage-input::placeholder {

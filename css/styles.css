@@ -29,19 +29,7 @@
   mix-blend-mode: difference;
   transform: translate(-50%,-50%);
 }
-.rage #cur {
-  width: 8px; height: 8px;
-  background: #fff;
-  mix-blend-mode: normal;
-  box-shadow: 0 0 6px rgba(255,255,255,.4);
-  transform: translate(-50%,-50%);
-}
-.rage #cur.big {
-  width: 30px; height: 30px;
-  background: transparent;
-  border: 2px solid var(--color-pink);
-  box-shadow: 0 0 8px var(--color-pink);
-}
+
 
 /* ── MOBILE: Ocultar cursor personalizado ── */
 @media (max-width: 768px) {
@@ -49,7 +37,6 @@
     display: none;
   }
 }
-
 
 /* ════════════════════
    PROGRESS BAR
@@ -61,7 +48,7 @@
   transition: background var(--transition-mode);
 }
 .clean #prog { background: var(--color-pink); }
-.rage  #prog { background: linear-gradient(90deg, var(--color-pink), var(--color-yellow), var(--color-blue)); }
+
  
 /* ════════════════════
    TOGGLE
@@ -80,9 +67,9 @@
   transition: color .4s, text-shadow .4s;
 }
 .clean .tgl-lbl   { color: #999; }
-.rage  .tgl-lbl   { color: rgba(255,255,255,.3); }
+
 .clean .clean-lbl { color: var(--color-text); font-weight: 700; }
-.rage  .rage-lbl  { color: var(--color-pink); font-weight: 700; text-shadow: var(--glow-pink); }
+
  
 #toggle-btn {
   width: 50px; height: 26px; border-radius: 999px;
@@ -90,18 +77,10 @@
   transition: background .4s, box-shadow .4s;
 }
 .clean #toggle-btn { background: #ccc; }
-.rage  #toggle-btn { background: var(--color-pink); box-shadow: var(--glow-pink); }
-#toggle-btn::after {
-  content: ''; position: absolute;
-  top: 3px; left: 3px; width: 20px; height: 20px;
-  border-radius: 50%; background: #fff;
-  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
-}
-.rage #toggle-btn::after { transform: translateX(24px); }
 
 
 /* ═══════════════════════════════════════════════════════════
-   LANDING
+   HOME
    ═══════════════════════════════════════════════════════════ */
 #landing {
   position: fixed;
@@ -183,12 +162,62 @@ p {
   color: var(--color-text);
   font-size: var(--text-base);
   line-height: 1.9;
-  max-width: 280px; 
+
   margin-bottom: 2rem;
 }
 .p-white{
   color:var(--bg-white);
 }
+
+/* ════════════════════
+   RAGE
+════════════════════ */
+
+/* ── CURSOR - RAGE── */
+.rage #cur {
+  width: 8px; height: 8px;
+  background: #fff;
+  mix-blend-mode: normal;
+  box-shadow: 0 0 6px rgba(255,255,255,.4);
+  transform: translate(-50%,-50%);
+}
+.rage #cur.big {
+  width: 30px; height: 30px;
+  background: transparent;
+  border: 2px solid var(--color-pink);
+  box-shadow: 0 0 8px var(--color-pink);
+}
+/* ── PROGRESS BAR - RAGE ── */
+.rage  #prog { 
+  background: linear-gradient(90deg, var(--color-pink), var(--color-purple), var(--color-blue)); }
+
+/* ── TOGGLE - RAGE ── */
+.rage  .tgl-lbl   { 
+  color: var(--color-eyebrow); 
+}
+.rage  .rage-lbl  { 
+  color: var(--color-pink); 
+  font-weight: 700; 
+  text-shadow: var(--glow-pink); }
+
+  .rage  #toggle-btn { 
+    background: var(--color-pink); 
+    box-shadow: var(--glow-pink); }
+
+#toggle-btn::after {
+  content: ''; 
+  position: absolute;
+  top: 3px; 
+  left: 3px; 
+  width: 20px; 
+  height: 20px;
+  border-radius: 50%; 
+  background: white;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.rage #toggle-btn::after { transform: translateX(24px); }
+
+/* ── Textos - RAGE ── */
 .clean .pink-bold,
 .rage .pink-bold,
 .clean strong.pink-bold,
@@ -196,7 +225,6 @@ p {
   color: var(--color-pink);
   font-weight: 800;
 }
-
 /* ════════════════════
    FOOTER
 ════════════════════ */
@@ -206,7 +234,6 @@ footer {
   display: flex;
   flex-direction: row;
   align-items: center;
-  transition: background var(--transition-mode);
 }
 
 footer p:last-child {

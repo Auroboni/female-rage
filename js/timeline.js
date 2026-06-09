@@ -75,13 +75,10 @@ function initRefs() {
 function initPanels() {
   panels.forEach(panel => {
     const els = panel.querySelectorAll(
-      '.tl-eyebrow, .tl-rule, .tl-h2, .tl-h3, ' +
+      '.tl-eyebrow, .tl-h2, .tl-h3, ' +
       '.tl-body, .tl-quote, .tl-cols, .tl-year-display'
     );
     gsap.set(Array.from(els), { opacity: 0, y: 24 });
-
-    const rule = panel.querySelector('.tl-rule');
-    if (rule) gsap.set(rule, { scaleX: 0, opacity: 0 });
   });
 }
 
@@ -144,7 +141,6 @@ function buildPanelAnimations() {
 
   panels.forEach(panel => {
     const eyebrow  = panel.querySelector('.tl-eyebrow');
-    const rule     = panel.querySelector('.tl-rule');
     const h2       = panel.querySelector('.tl-h2');
     const h3       = panel.querySelector('.tl-h3');
     const cols     = panel.querySelector('.tl-cols');
@@ -152,17 +148,15 @@ function buildPanelAnimations() {
     const quote    = panel.querySelector('.tl-quote');
     const yearDisp = panel.querySelector('.tl-year-display');
 
-    const allEls = [eyebrow, rule, h2, h3, cols, body, quote, yearDisp]
+    const allEls = [eyebrow, h2, h3, cols, body, quote, yearDisp]
       .filter(Boolean);
 
     gsap.killTweensOf(allEls);
     gsap.set(allEls, { opacity: 0, y: 24 });
-    if (rule) gsap.set(rule, { scaleX: 0, opacity: 0 });
 
     const tl = gsap.timeline({ paused: true });
 
     if (eyebrow)  tl.to(eyebrow,  { opacity:1, y:0, ease:'power2.out', duration:1   }, 0);
-    if (rule)     tl.to(rule,     { opacity:1, scaleX:1, ease:'power2.out', duration:.8  }, .3);
     if (h2)       tl.to(h2,       { opacity:1, y:0, ease:'power2.out', duration:1.1 }, .4);
     if (h3)       tl.to(h3,       { opacity:1, y:0, ease:'power2.out', duration:.9  }, .55);
     if (cols)     tl.to(cols,     { opacity:1, y:0, ease:'power2.out', duration:1   }, .65);

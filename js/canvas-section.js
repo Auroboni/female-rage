@@ -30,7 +30,7 @@
 
   const sketch = (p) => {
     let shards = [];
-    let debris = [];
+    let polvo = [];
     let flashes = [];
     let cracks = [];
     let wordCracks = [];
@@ -69,7 +69,7 @@
       wordAlpha = 0;
       wordCracks = [];
       shards = [];
-      debris = [];
+      polvo = [];
       flashes = [];
       cracks = [];
       setInputEnabled(false);
@@ -158,11 +158,11 @@
         });
       }
 
-      const nDebris = 60 + Math.floor(intensity * 80);
-      for (let i = 0; i < nDebris; i++) {
+      const npolvo = 60 + Math.floor(intensity * 80);
+      for (let i = 0; i < npolvo; i++) {
         const angle = p.random(p.TWO_PI);
         const spd = p.random(0.5, 8) * (0.3 + intensity * 0.9);
-        debris.push({
+        polvo.push({
           x: cx + p.random(-40, 40),
           y: cy + p.random(-20, 20),
           vx: Math.cos(angle) * spd,
@@ -189,7 +189,7 @@
       drawFlashes();
       drawFinalCracks();
       drawShards();
-      drawDebris();
+      drawpolvo();
       checkBreakDone();
     };
 
@@ -317,13 +317,13 @@
       }
     }
 
-    function drawDebris() {
-      for (let i = debris.length - 1; i >= 0; i--) {
-        const d = debris[i];
+    function drawpolvo() {
+      for (let i = polvo.length - 1; i >= 0; i--) {
+        const d = polvo[i];
         d.x += d.vx; d.y += d.vy;
         d.vy += d.gravity; d.vx *= 0.98;
         d.life -= d.decay;
-        if (d.life <= 0) { debris.splice(i, 1); continue; }
+        if (d.life <= 0) { polvo.splice(i, 1); continue; }
         p.noStroke();
         p.fill(d.r, d.g, d.b, d.life);
         p.circle(d.x, d.y, d.size);
@@ -333,7 +333,7 @@
     function checkBreakDone() {
       if (phase === 'breaking' &&
           shards.length === 0 &&
-          debris.length === 0 &&
+          polvo.length === 0 &&
           flashes.length === 0) {
         phase = 'idle';
         setInputEnabled(true);

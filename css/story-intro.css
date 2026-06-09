@@ -15,7 +15,7 @@
 .si-word {
   margin: 0;
   padding: 0;
-  font-family: 'Boldonse', sans-serif;
+  font-family: var(--font-titles);
   font-size: clamp(5rem, 9vw, 12rem);
   color: #fff;
   line-height: 1;

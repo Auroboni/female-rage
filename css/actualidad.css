@@ -3,7 +3,7 @@
    HTML plano: eyebrow · title · figure · h2 · body
 ════════════════════════════════════════════════════════════ */
 
-#porqueahora {
+#actualidad {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
@@ -74,7 +74,7 @@
 /* ── H1 ACTUALIDAD ── */
 .pqa-title {
   font-family: var(--font-titles);
-  font-size: clamp(4rem, 10vw, 21rem);
+  font-size: var(--h1);
   line-height: .85;
   color: var(--color-pink);
   text-align: left;
@@ -86,7 +86,7 @@
 /* ── H2 subtítulo ── */
 .pqa-subtitle {
   font-family: var(--font-titles);
-  font-size: clamp(1.3rem, 2.1vw, 2.8rem);
+  font-size: var(--h2);
   line-height: 1.1;
   color: rgba(255, 255, 248, .9);
   margin-bottom: 3rem;
@@ -124,7 +124,7 @@
    Orden natural del DOM: eyebrow → title → img → subtitle → body
 ════════════════════ */
 @media (max-width: 1024px) {
-  #porqueahora {
+  #actualidad {
     min-height: unset;
     padding: clamp(3rem, 6vh, 5rem) clamp(1.5rem, 5vw, 2.5rem);
   }
@@ -174,8 +174,8 @@
    RAGE MODE
 ════════════════════ */
 
-.rage #porqueahora {
-  background: #0A0A0A;
+.rage #actualidad {
+  background: var(--bg-rage);
 }
 
 .rage .pqa-eyebrow {
@@ -186,12 +186,13 @@
 .rage .pqa-title {
   font-size: clamp(6rem, 15vw, 24rem);
   text-shadow: var(--glow-pink);
+  font-family: var(--font-titles-rage);
 }
 
 .rage .pqa-subtitle {
   color: var(--color-blue);
   text-shadow: var(--glow-blue);
-  font-family: 'Boldonse', sans-serif; /* no cambia la tipografía en rage */
+  font-family: var(--font-titles-rage);
 }
 
 /* ── Glitch solo en hover ── */
