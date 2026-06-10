@@ -464,7 +464,7 @@ figcaption.tl-img-caption {
 .rage .p-md,
 .rage .p-lg,
 .rage .p-xl,
-.rage .p-xl2 { box-shadow: inset 100px 0 70px -40px rgba(0,0,0,.65); }
+.rage .p-xl2 { box-shadow: inset 60px 0 50px -30px rgba(0,0,0,.5); }
 
 .rage .tl-h1 span {
   font-family: var(--font-titles-rage);
@@ -521,7 +521,7 @@ figcaption.tl-img-caption {
   -webkit-text-stroke: 1px var(--bg-white);
   text-shadow: var(--glow-pink);
 }
-.rage .p-xl2 .tl-year-display { color: transparent; -webkit-text-stroke: 1px var(--bg-white); text-shadow: var(--glow-purple); }
+.rage .p-xl2 .tl-year-display { color: transparent; -webkit-text-stroke: 1px var(--bg-white); text-shadow: 0 0 12px rgba(69, 74, 222, 0.4); }
 
 .rage .tl-ghost { font-family: var(--font-titles); }
 .rage .p-sm  .tl-ghost {
@@ -529,10 +529,9 @@ figcaption.tl-img-caption {
 }
 .rage .p-md  .tl-ghost {
   color: transparent; -webkit-text-stroke: 1px rgba(225, 1, 106, 0.3);
-  filter: drop-shadow(0 0 20px rgba(212,255,0,.12));
 }
-.rage .p-lg  .tl-ghost { color: transparent; -webkit-text-stroke: 1px rgba(0, 161, 182, 0.3);  filter: drop-shadow(0 0 20px rgba(2,225,255,.04)); }
-.rage .p-xl  .tl-ghost { color: transparent; -webkit-text-stroke: 1px rgba(151, 30, 70, 0.3); filter: drop-shadow(0 0 28px rgba(216,30,91,.12)); }
+.rage .p-lg  .tl-ghost { color: transparent; -webkit-text-stroke: 1px rgba(0, 161, 182, 0.3); }
+.rage .p-xl  .tl-ghost { color: transparent; -webkit-text-stroke: 1px rgba(151, 30, 70, 0.3); }
 
 
 .rage .tl-intro-body { color: var(--bg-white); }
@@ -542,10 +541,10 @@ figcaption.tl-img-caption {
 .rage .tl-prog { background: rgba(255,255,255,.06); }
 .rage .tl-prog-fill { background: linear-gradient(90deg,var(--color-pink),var(--color-yellow)); }
 
-.rage #dot-nav { background: rgba(0,0,0,.9);  backdrop-filter: blur(8px); border-color: rgba(216,30,91,.3); box-shadow: 0 0 18px rgba(216,30,91,.1); }
+.rage #dot-nav { background: rgba(0,0,0,.9); border-color: rgba(216,30,91,.3); }
 
 .rage .dot    { border-radius: 0; transform: rotate(45deg); background: rgba(255,255,255,.18); }
-.rage .dot.on { background: var(--color-pink); transform: rotate(45deg) scale(1.5); box-shadow: var(--glow-pink); }
+.rage .dot.on { background: var(--color-pink); transform: rotate(45deg) scale(1.5); }
 
 
 /* ════════════════════

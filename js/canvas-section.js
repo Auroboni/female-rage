@@ -196,14 +196,11 @@
     function drawIdleMessage() {
       if (phase !== 'idle' || wordHistory.length > 0) return;
       p.textAlign(p.CENTER, p.CENTER);
-      p.textSize(14);
+      p.textSize(24);
       p.noStroke();
       p.fill(40);
-      p.textFont('Inconsolata, monospace');
-      p.text('ESCRIBE LO QUE NO PUEDES DECIR EN VOZ ALTA', p.width / 2, p.height / 2 - 6);
-      p.textSize(9);
-      p.fill(25);
-      p.text('pulsa enter o haz clic en romper', p.width / 2, p.height / 2 + 12);
+      p.textFont('Boldonse, sans-serif');
+      p.text('RÓMPELO', p.width / 2, p.height / 2 - 6);
     }
 
     function drawWord() {

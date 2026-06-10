@@ -202,7 +202,7 @@
       <a href="#actualidad">Actualidad</a>
       <a href="#catalogo">Cartelera</a>
       <a href="#catarsis">Catarsis</a>
-      <a href="#p5-canvas-wrap">Libertad</a>
+      <a href="#canvas-section">Libertad</a>
     </nav>
 
     <button class="header-menu-btn" id="header-menu-btn" aria-label="Menú">
@@ -218,7 +218,7 @@
     <a href="#actualidad">Actualidad</a>
     <a href="#catalogo">Cartelera</a>
     <a href="#catarsis">Catarsis</a>
-    <a href="#p5-canvas-wrap">Libertad</a>
+    <a href="#canvas-section">Libertad</a>
   </nav>
 
   <!-- ══ TIMELINE HORIZONTAL ══ -->
@@ -619,15 +619,17 @@
   </section>
 
   <!-- ══ CANVAS SECTION — Interacción final ══ -->
-  <section id="canvas-section">
-    <p class="canvas-eyebrow">06 — Libres</p>
-    <h2 class="canvas-title">Libera tu ira</h2>
+<section id="canvas-section">
 
-    <!-- Canvas interactivo -->
+  <p class="canvas-eyebrow">06 — Libres</p>
+  <h2 class="canvas-title">Desata tu ira</h2>
+
+  <!-- Canvas interactivo -->
+  <div class="canvas-wrap">
+
     <div id="p5-canvas-wrap"></div>
+    <div class="canvas-bar">
 
-    <!-- Input -->
-    <div class="canvas-input-area">
       <input
         id="canvas-rage-input"
         type="text"
@@ -635,42 +637,40 @@
         placeholder="Escribe lo que quieres destruir"
         autocomplete="off"
       >
+
       <button id="canvas-send-btn">DESTRUYE →</button>
-    </div>
 
-    <!-- Historial -->
-    <p class="canvas-history-label">Palabras rotas</p>
-    <div id="canvas-history"></div>
+      <div class="canvas-inline-ctrls">
 
-    <!-- Panel de controles -->
-    <div class="canvas-panel">
-      <div class="canvas-panel-title">Controles</div>
-      <div class="canvas-ctrls">
+        <!-- Colores -->
+        <div class="canvas-col-btn active" data-col="#D81E5B" style="background:#D81E5B"></div>
+        <div class="canvas-col-btn" data-col="#02E1FF" style="background:#02E1FF"></div>
+        <div class="canvas-col-btn" data-col="#D4FF00" style="background:#D4FF00"></div>
+        <div class="canvas-col-btn" data-col="#454ADE" style="background:#454ADE"></div>
+        <div class="canvas-col-btn" data-col="#ffffff" style="background:#fff"></div>
 
-        <!-- Color -->
-        <div class="canvas-ctrl canvas-ctrl-full">
-          <div class="canvas-clbl" style="margin-bottom: 0.8rem;">Color</div>
-          <div class="canvas-color-opts">
-            <div class="canvas-col-btn active" data-col="#D81E5B" style="background:#D81E5B"></div>
-            <div class="canvas-col-btn" data-col="#02E1FF" style="background:#02E1FF"></div>
-            <div class="canvas-col-btn" data-col="#D4FF00" style="background:#D4FF00"></div>
-            <div class="canvas-col-btn" data-col="#454ADE" style="background:#454ADE"></div>
-            <div class="canvas-col-btn" data-col="#ffffff" style="background:#fff"></div>
-          </div>
-        </div>
+        <div class="canvas-bar-sep"></div>
 
         <!-- Intensidad -->
-        <div class="canvas-ctrl canvas-ctrl-full">
-          <div class="canvas-clbl">
-            Intensidad
-            <span id="canvas-val-spd">6</span>
-          </div>
+        <div class="canvas-spd-wrap">
+          <span class="canvas-spd-label">INTENSITY</span>
           <input type="range" id="canvas-spd" min="1" max="10" value="6" step="1">
+          <span id="canvas-val-spd" class="canvas-spd-val">6</span>
         </div>
 
       </div>
+
     </div>
-  </section>
+
+    <!-- Historial -->
+    <div class="canvas-footer">
+      <span class="canvas-history-label">Palabras rotas</span>
+      <div id="canvas-history"></div>
+    </div>
+
+  </div>
+
+</section>
 
   </main>
 
@@ -680,7 +680,7 @@
       <strong>HISTERIA</strong> — Aurora Bonillo
     </p>
     <p>
-      <small> Programación para Creativos · 2026</small>
+       Programación para Creativos · 2026
     </p>
   </footer>
  
