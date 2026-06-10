@@ -152,6 +152,10 @@
     max-width: 100%;
   }
 
+  .pqa-body p {
+    font-size: var(--text-mobile);
+  }
+
   /* Título en una sola línea */
   .pqa-title {
     font-size: clamp(2rem, 11.5vw, 4rem);
@@ -161,6 +165,7 @@
 
   .pqa-body {
     flex-direction: column;
+    font-size: var(--text-mobile);
   }
 
   .pqa-subtitle {

@@ -77,7 +77,7 @@
   --text-base: 16px;
   --text-quote: 28px;
   --text-tag: 11px;
-
+  --text-mobile:16px;
   /* ── TRANSICIONES ── */
   --transition-fast: .15s ease;
   --transition-base: .3s ease;

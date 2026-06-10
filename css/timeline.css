@@ -565,7 +565,9 @@ figcaption.tl-img-caption {
     width: 100%;
     transform: none !important;
   }
-
+.tl-intro-body{
+  font-size: var(--text-mobile);
+}
   /* Paneles apilados */
   .panel {
     height: auto;
@@ -588,9 +590,11 @@ figcaption.tl-img-caption {
   .tl-h1 { font-size: clamp(2.4rem,10vw,3.4rem); line-height: 1.55; }
 
   /* Título en una sola línea: ocultar los <br> y ajustar tamaño */
-  .tl-h2         { font-size: clamp(1.1rem,5vw,1.6rem); letter-spacing: .14em; white-space: nowrap; margin-bottom: 0; }
-  .rage .tl-h2   { font-size: clamp(2rem,8.5vw,3rem); }
-  .tl-h2 br      { display: none; }
+  .tl-h2         { 
+    font-size: clamp(1.1rem,5vw,3rem); 
+    white-space: nowrap; margin-bottom: 0; }
+  .rage .tl-h2   { 
+    font-size: clamp(2rem,8.5vw,3rem); }
 
   /* Línea separadora entre título y contenido */
   .tl-h2::after {
@@ -607,12 +611,16 @@ figcaption.tl-img-caption {
   .tl-h3 { font-size: clamp(1.6rem,6.5vw,2.2rem); }
 
   /* Texto corrido a ancho completo */
-  .tl-body  { max-width: 100%; }
+  .tl-body  { max-width: 100%;
+   }
   .tl-body--cols { grid-template-columns: 1fr; }
-  .tl-quote { max-width: 100%; font-size: clamp(.95rem,3.8vw,1.2rem); }
+  .tl-quote { max-width: 100%; 
+  font-size: var(--text-mobile); }
 
   /* p global de timeline.css */
-  p { max-width: 100%; }
+  p { 
+    max-width: 100%; 
+  font-size: var(--text-mobile);}
 
   /* Dos columnas → una columna */
   .tl-cols { grid-template-columns: 1fr; gap: 1.2rem; }

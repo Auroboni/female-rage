@@ -168,7 +168,7 @@
   }
 
   .fr-title {
-    font-size: clamp(1.2rem, 5vw, 1.4rem);
+    font-size: clamp(1.2rem, 7vw, 2rem);
   }
 
   .fr-subtitle {

@@ -207,7 +207,12 @@
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
-
+ .cas-col-body {
+  font-size: var(--text-mobile);
+}
+.cas-col-title{
+  font-size: 18px;
+}
   .cas-cols-wrap {
     gap: 2rem;
     margin: 3rem auto;
@@ -217,5 +222,8 @@
   .cas-cta-wrap {
     padding: 3rem 1.5rem;
     margin: 3rem 0;
+  }
+  .testimonial-text {
+    font-size: var(--text-mobile);
   }
 }

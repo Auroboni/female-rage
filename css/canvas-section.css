@@ -374,7 +374,9 @@ input[type="range"]#canvas-spd::-moz-range-thumb {
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
   }
-
+.canvas-title{
+  justify-content: center;
+}
   #canvas-rage-input {
     grid-column: 1;
     grid-row: 1;

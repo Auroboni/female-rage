@@ -19,8 +19,54 @@ main {
   align-items: center;
 }
 
-body.clean { 
-  background: var(--bg-white); 
+body.clean {
+  background: var(--bg-white);
+}
+
+/* ── HEADER FICHA ── */
+#ficha-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: var(--bg-white);
+  border-bottom: 1px solid whitesmoke;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  transition: background 0.4s ease;
+}
+
+.ficha-header-back {
+  font-family: var(--font-texts);
+  font-size: var(--text-tag);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-eyebrow);
+  transition: color var(--transition-base);
+}
+
+.ficha-header-back:hover {
+  color: var(--color-pink);
+}
+
+main {
+  padding-top: 60px;
+}
+
+/* Rage mode header */
+.rage #ficha-header {
+  background: var(--bg-rage);
+  border-bottom-color: #1a0008;
+}
+
+.rage .ficha-header-back {
+  color: var(--color-pink);
+  text-shadow: var(--glow-pink);
 }
 
 /* ── BACK BUTTON ── */
@@ -106,6 +152,7 @@ body.clean {
   border-left: 2px solid;
   max-width: 720px;
   transition: color .4s, border-color .4s, text-shadow .4s;
+  padding: 20px; 
 }
 .clean .quote {
   color: var(--color-text);
@@ -310,14 +357,16 @@ body.rage  { background: var(--bg-rage); }
 ════════════════════ */
 @media (max-width: 768px) {
 
-  main { align-items: flex-start; }
+  main {
+    align-items: flex-start;
+  }
 
   /* Contenedor: flex columna en lugar del grid de 3 columnas */
   .ficha-content {
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
-    padding: 5rem 1.4rem 3rem;
+    padding: 2rem 1.4rem 3rem;
 
   }
 
@@ -345,8 +394,13 @@ body.rage  { background: var(--bg-rage); }
     order: 4; 
     border-left: none; 
     border-top: 2px solid var(--color-blue); padding: 1.4rem 0 0; }
-  .ficha-body { order: 5; }
-  .quote { order: 6; max-width: 100%; margin-top: 0; }
+  .ficha-body { order: 5;
+  font-size: var(--text-mobile); }
+  .quote { 
+    order: 6; 
+    max-width: 100%;
+     margin-top: 0;
+    }
 
   /* Rage: se reajusta la ficha tecnica */
   .rage .ficha-tecnica { 
