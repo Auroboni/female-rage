@@ -1,19 +1,29 @@
 /* ════════════════════════════════════════
    CATARSIS.JS
-   Animaciones de entrada para la sección final
+
+   Animaciones scroll-triggered para:
+   - Encabezado (eyebrow + título + intro): fade in secuencial
+   - Columnas: fade in con stagger
+   - Testimonio: fade in simple
+
+   ARQUITECTURA:
+   - ScrollTrigger: anima cuando entra en viewport
+   - once: true — ejecuta una sola vez
 ════════════════════════════════════════ */
 
 window.initCatarsisAnim = function () {
   const section = document.getElementById('catarsis');
   if (!section) return;
 
-  /* Header */
+  /* ENCABEZADO: eyebrow, título, introducción */
   const eyebrow = section.querySelector('.cas-eyebrow');
   const title = section.querySelector('.cas-title');
   const intro = section.querySelector('.cas-intro');
 
+  /* Estado inicial: invisibles, desplazados hacia abajo */
   gsap.set([eyebrow, title, intro], { opacity: 0, y: 20 });
 
+  /* TRIGGER 1: Encabezado — dispara cuando entra al 75% del viewport */
   ScrollTrigger.create({
     trigger: section,
     start: 'top 75%',
@@ -23,13 +33,14 @@ window.initCatarsisAnim = function () {
         .to(title, { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, .15)
         .to(intro, { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, .3);
     },
-    once: true
+    once: true  /* Ejecuta una sola vez */
   });
 
-  /* Columnas */
+  /* COLUMNAS: 3 columnas que aparecen con stagger */
   const cols = section.querySelectorAll('.cas-col');
   gsap.set(cols, { opacity: 0, y: 24 });
 
+  /* TRIGGER 2: Columnas — dispara cuando entra al 65% del viewport */
   ScrollTrigger.create({
     trigger: section.querySelector('.cas-cols-wrap'),
     start: 'top 65%',
@@ -47,36 +58,33 @@ window.initCatarsisAnim = function () {
     once: true
   });
 
-  /* Testimonio - Typing Animation */
-  const testimonialText = section.querySelector('.testimonial-text');
-  if (testimonialText && window.SplitText) {
-    try {
-      const split = new SplitText(testimonialText, { type: 'chars' });
-      gsap.set(split.chars, { opacity: 0 });
+  /* TESTIMONIO: Fade in simple */
+  const testimonialSection = document.getElementById('testimonial-section');
+  const testimonialText = document.querySelector('.testimonial-text');
 
-      ScrollTrigger.create({
-        trigger: section.querySelector('#testimonial-section'),
-        start: 'top 70%',
-        onEnter: () => {
-          gsap.to(split.chars, {
-            opacity: 1,
-            duration: 0.05,
-            stagger: 0.05,
-            ease: 'power1.out'
-          });
-        },
-        once: true
-      });
-    } catch (e) {
-      console.warn('SplitText animation failed:', e);
-    }
+  if (testimonialText && testimonialSection) {
+    gsap.set(testimonialText, { opacity: 0 });
+
+    /* TRIGGER 3: Testimonio — fade in cuando entra al 70% */
+    ScrollTrigger.create({
+      trigger: testimonialSection,
+      start: 'top 70%',
+      onEnter: () => {
+        gsap.to(testimonialText, {
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power2.out'
+        });
+      },
+      once: true
+    });
   }
+
+  ScrollTrigger.refresh();
 };
 
-/* Flag para evitar ejecutar dos veces */
 let catarsisDoneOnce = false;
 
-/* Ejecutar cuando showPage esté listo */
 if (window.showPage) {
   const origShowPage = window.showPage;
   window.showPage = function () {
@@ -95,7 +103,6 @@ if (window.showPage) {
   });
 }
 
-/* Ejecutar también cuando la sección sea visible (para casos como volver de ficha) */
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const section = document.getElementById('catarsis');

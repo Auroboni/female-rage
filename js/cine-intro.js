@@ -1,14 +1,29 @@
+/* ════════════════════════════════════════
+   CINE-INTRO.JS — sección de transición
 
-/* ─── CINE — sección en scroll, iniciada desde showPage() ─── */
+   Efecto: mientras hace scroll, la palabra se
+   desliza horizontalmente (slide-out)
+
+   ARQUITECTURA:
+   - ScrollTrigger: vinculado al scroll
+   - scrub: true — anima en sincronía con scroll
+   - xPercent: desliza horizontalmente (-100% = salida)
+════════════════════════════════════════ */
+
 window.initCineIntroAnim = function () {
   const wrap    = document.querySelector('.cine-wrap');
   const section = document.getElementById('cine-intro');
   if (!wrap || !section) return;
 
-  /* Sin ScrollTrigger — se calcula la posición directamente del DOM
-     en cada frame. Inmune a ScrollTrigger.refresh() y al toggle rage. */
-  gsap.ticker.add(function () {
-    const progress = Math.max(0, Math.min(1, -wrap.getBoundingClientRect().top / window.innerHeight));
-    gsap.set(section, { xPercent: -100 * progress });
+  gsap.to(section, {
+    xPercent: -100,
+    opacity: 0,
+    scrollTrigger: {
+      trigger: wrap,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: true,
+      markers: false
+    }
   });
 };

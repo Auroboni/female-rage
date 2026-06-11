@@ -1,11 +1,15 @@
-/* STORY-INTRO
-   Pantalla de transición post-countdown
-   Overlay fijo que cubre antes de mostrar el timeline
-*/
+/* ════════════════════════════════════════
+   STORY-INTRO.JS — sección transición a timeline
 
-/* ─── HISTORIA — overlay fijo, envuelve showPage ─── */
+   Secuencia:
+   - Overlay cubre pantalla completa
+   - Palabra entra con efecto "back out"
+   - Pausa de lectura
+   - Overlay sube (yPercent -100) mientras timeline inicia
+════════════════════════════════════════ */
+
 (function () {
-  const origShowPage = window.showPage;
+  const origShowPage = window.showPage; 
 
   window.showPage = function () {
     const intro = document.getElementById('story-intro');
@@ -18,7 +22,7 @@
 
     gsap.set(intro, { opacity: 1 });
 
-    /* Texto empieza rotado, escalado, desenfocado, transparente y desplazado */
+    /* ESTADO INICIAL: palabra está fuera de viewport*/
     gsap.set(word, {
       scale: 1.5,
       opacity: 0,
@@ -28,10 +32,10 @@
     });
 
     gsap.timeline()
-      /* Pausa mínima */
+      /* FASE 1: pausa inicial 0.3s */
       .to({}, { duration: 0.3 })
 
-      /* Entrada dinámica: sube, desrotaciona, enfoca y aparece */
+      /* FASE 2: entrada dinámica */
       .to(word, {
         scale:    1,
         opacity:  1,
@@ -42,10 +46,13 @@
         ease:     'back.out(1.2)'
       })
 
-      /* Pausa de lectura */
+      /* FASE 3: pausa*/
       .to({}, { duration: 1.5 })
 
+      /* FASE 4: iniciar página principal */
       .call(origShowPage)
+
+      /* FASE 5: overlay sube mientras timeline entra */
       .to(intro, { yPercent: -100, duration: 1.5, ease: 'power2.inOut' });
   };
 })();

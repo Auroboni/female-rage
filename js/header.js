@@ -1,6 +1,9 @@
 /* ════════════════════════════════════════
-   HEADER.JS
-   Navegación principal
+   HEADER.JS 
+
+   Maneja el menú hamburguesa en mobile:
+   - Toggle: click en botón abre/cierra
+   - Auto-cierre: al hacer click en enlace
 ════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,13 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!header) return;
 
-  /* ── Toggle menú mobile ── */
+  /* TOGGLE: click en hamburguesa abre/cierra menú */
   menuBtn.addEventListener('click', () => {
     menuBtn.classList.toggle('active');
     mobileMenu.classList.toggle('active');
   });
 
-  /* ── Cerrar menú mobile al hacer click en link ── */
+  /* AUTO-CIERRE: al hacer click en cualquier enlace, cierra el menú */
   navLinks.forEach(link => {
     link.addEventListener('click', () => {
       menuBtn.classList.remove('active');

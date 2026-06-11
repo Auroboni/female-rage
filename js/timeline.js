@@ -1,126 +1,116 @@
 /* ════════════════════════════════════════
-   TIMELINE.JS
-   Scroll horizontal con GSAP ScrollTrigger
-   + Lenis smooth scroll.
+   TIMELINE.JS — scroll horizontal
 
-   NO ejecuta nada al cargarse.
-   Todo arranca desde showPage() que llama
-   countdown.js cuando termina el contador.
+   Implementa scroll horizontal en desktop
+   usando GSAP ScrollTrigger (Lenis en main.js).
 
-   Expone: window.showPage(), window.lenis
+   ARQUITECTURA:
+   - ScrollTrigger: sincroniza animaciones con scroll
+   - Panel animations: staggered, basado en viewport
+   - Toggle: intercambia clean ↔ rage + rebuild
+   - Dots: navegación visual por panel
 ════════════════════════════════════════ */
 
-/* ────────────────────────────────────
-   LENIS — smooth scroll
-   Integrado con ScrollTrigger via ticker.
-──────────────────────────────────── */
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  smoothWheel: true
-});
 
-lenis.on('scroll', ScrollTrigger.update);
+/* Referencias al DOM */
+let track     = null;  /* .panel container que se anima horizontalmente */
+let pin       = null;  /* #tl-pin que contiene el track */
+let panels    = [];    /* Array de .panel (excepto .p-intro) */
+let dots      = null;  /* NodeList de .dot (navegación) */
+let dotNav    = null;  /* #dot-nav (contenedor de dots) */
 
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
+/* Estado */
+let isRage    = false;              /* Bandera: está en rage mode */
+let hST       = null;               /* ScrollTrigger principal (pin horizontal) */
+let hTween    = null;               /* GSAP tween que anima track x */
+let panelSTs  = [];                 /* Array de ScrollTriggers per panel */
+let rebuilding = false;             /* Flag: bloquea toggle durante rebuild */
+let _wasMobile = window.innerWidth <= 768;  /* Para detectar resize */
 
-/* Cuando ScrollTrigger crea/actualiza el pin spacer, relanza el cálculo
-   de scroll limit de Lenis para que ambos estén sincronizados. */
-ScrollTrigger.addEventListener('refresh', () => lenis.resize());
-
-window.lenis = lenis;
-
-/* ── BARRA DE PROGRESO ── */
-lenis.on('scroll', ({ scroll, limit }) => {
-  const pct = limit > 0 ? (scroll / limit) * 100 : 0;
-  document.getElementById('prog').style.width = pct + '%';
-});
-
-
-/* ────────────────────────────────────
-   ESTADO DEL MÓDULO
-──────────────────────────────────── */
-let track     = null;
-let pin       = null;
-let panels    = [];
-let dots      = null;
-let dotNav    = null;
-
-let isRage    = false;
-let hST       = null;   /* ScrollTrigger principal (pin) */
-let hTween    = null;   /* tween que mueve el track */
-let panelSTs  = [];     /* ScrollTriggers por panel */
-let rebuilding = false; /* bloquea toggle durante rebuild */
-let _wasMobile = window.innerWidth <= 768;
-
+/* Utilidad: detecta si es mobile */
 function isMobile() { return window.innerWidth <= 768; }
 
 
-/* ────────────────────────────────────
-   PASO 1 — initRefs()
-──────────────────────────────────── */
+/* PASO 1: cachear referencias al DOM
+   Obtiene todos los elementos que se animan */
 function initRefs() {
-  track  = document.getElementById('tl-track');
-  pin    = document.getElementById('tl-pin');
-  panels = Array.from(document.querySelectorAll('.panel:not(.p-intro)'));
-  dots   = document.querySelectorAll('.dot');
-  dotNav = document.getElementById('dot-nav');
+  track  = document.getElementById('tl-track');  /* Container horizontal que se mueve */
+  pin    = document.getElementById('tl-pin');    /* Wrapper que se "pichea" */
+  panels = Array.from(document.querySelectorAll('.panel:not(.p-intro)'));  /* Excepto intro */
+  dots   = document.querySelectorAll('.dot');    /* Indicadores de navegación */
+  dotNav = document.getElementById('dot-nav');   /* Contenedor de dots */
 }
 
 
-/* ────────────────────────────────────
-   PASO 2 — initPanels()
-──────────────────────────────────── */
+/* PASO 2: prepara paneles con estado inicial invisible
+   Todos los elementos dentro de cada panel se preparan
+   para ser animados cuando entren en viewport */
 function initPanels() {
   panels.forEach(panel => {
+    /* Elementos que se animan dentro de cada panel */
     const els = panel.querySelectorAll(
       '.tl-eyebrow, .tl-h2, .tl-h3, ' +
       '.tl-body, .tl-quote, .tl-cols, .tl-year-display'
     );
+    /* Estado inicial: invisibles, desplazados hacia abajo */
     gsap.set(Array.from(els), { opacity: 0, y: 24 });
   });
 }
 
 
-/* ────────────────────────────────────
-   PASO 3 — buildScroll()
-──────────────────────────────────── */
+/* PASO 3: configura scroll horizontal (desktop) o vertical (mobile)
+
+   Desktop:
+   - Crea tween que mueve track en -X
+   - ScrollTrigger sincroniza: scroll vertical → movimiento horizontal
+   - Pin: mantiene la sección fija mientras scrollea
+
+   Mobile:
+   - Salta scroll horizontal, usa animaciones normales */
 function buildScroll() {
-  if (hST)   { hST.kill();   hST   = null; }
-  if (hTween){ hTween.kill(); hTween = null; }
+  /* Limpia animaciones previas */
+  if (hST)    { hST.kill();    hST    = null; }
+  if (hTween) { hTween.kill();  hTween = null; }
   panelSTs.forEach(st => st.kill());
   panelSTs = [];
 
+  /* Reset: limpia propiedades X previas */
   gsap.set(track, { clearProps: 'x,transform' });
 
+  /* MOBILE: no hay scroll horizontal */
   if (isMobile()) {
     buildPanelAnimations();
     return;
   }
 
+  /* DESKTOP: crea el tween de movimiento horizontal
+     Mueve el track hacia la izquierda (-X) según el ancho total */
   hTween = gsap.to(track, {
     x: () => -(track.scrollWidth - window.innerWidth),
     ease: 'none',
-    paused: true
+    paused: true  /* ScrollTrigger controla el play */
   });
 
+  /* ScrollTrigger: convierte scroll vertical en horizontal */
   hST = ScrollTrigger.create({
     trigger: pin,
     start: 'top top',
-    end: () => `+=${track.scrollWidth - window.innerWidth}`,
-    pin: true,
-    anticipatePin: 1,
-    scrub: 1,
+    end: () => `+=${track.scrollWidth - window.innerWidth}`,  /* Dinámico según contenido */
+    pin: true,  /* Mantiene pin fijo mientras scrollea */
+    anticipatePin: 1,  /* Mejora performance */
+    scrub: 1,  /* Smooth scrub de 1s */
     invalidateOnRefresh: true,
     animation: hTween,
     onUpdate: self => {
+      /* FILL: barra de progreso del track */
       const fill = document.getElementById('tlFill');
       if (fill) fill.style.width = (self.progress * 100) + '%';
 
+      /* DOTS: actualiza cuál dot está activo */
       const idx = Math.round(self.progress * (dots.length - 1));
       dots.forEach((d, i) => d.classList.toggle('on', i === idx));
 
+      /* DOT NAV: visible entre 1% y 99% del scroll */
       dotNav.classList.toggle(
         'vis',
         self.progress > .01 && self.progress < .99
@@ -132,14 +122,24 @@ function buildScroll() {
 }
 
 
-/* ────────────────────────────────────
-   PASO 4 — buildPanelAnimations()
-──────────────────────────────────── */
+/* PASO 4: anima elementos dentro de cada panel
+   Responsivo: desktop tiene scroll horizontal,
+   mobile tiene scroll vertical normal
+
+   Cada panel tiene una timeline staggered:
+   - eyebrow: opacity, y
+   - h2, h3: opacity, y
+   - body, cols: opacity, y
+   - quote: opacity, y
+   - yearDisplay: opacity, y
+*/
 function buildPanelAnimations() {
+  /* Limpia previos */
   panelSTs.forEach(st => st.kill());
   panelSTs = [];
 
   panels.forEach(panel => {
+    /* Obtiene elementos dentro del panel */
     const eyebrow  = panel.querySelector('.tl-eyebrow');
     const h2       = panel.querySelector('.tl-h2');
     const h3       = panel.querySelector('.tl-h3');
@@ -149,13 +149,16 @@ function buildPanelAnimations() {
     const yearDisp = panel.querySelector('.tl-year-display');
 
     const allEls = [eyebrow, h2, h3, cols, body, quote, yearDisp]
-      .filter(Boolean);
+      .filter(Boolean);  /* Filtra nulls */
 
+    /* Reset */
     gsap.killTweensOf(allEls);
     gsap.set(allEls, { opacity: 0, y: 24 });
 
+    /* Timeline paused: ScrollTrigger la controlará */
     const tl = gsap.timeline({ paused: true });
 
+    /* Staggered animation: cada elemento aparece con delay */
     if (eyebrow)  tl.to(eyebrow,  { opacity:1, y:0, ease:'power2.out', duration:1   }, 0);
     if (h2)       tl.to(h2,       { opacity:1, y:0, ease:'power2.out', duration:1.1 }, .4);
     if (h3)       tl.to(h3,       { opacity:1, y:0, ease:'power2.out', duration:.9  }, .55);
@@ -164,16 +167,19 @@ function buildPanelAnimations() {
     if (quote)    tl.to(quote,    { opacity:1, y:0, ease:'power2.out', duration:.9  }, .85);
     if (yearDisp) tl.to(yearDisp, { opacity:1, y:0, ease:'power2.out', duration:1   }, .9);
 
+    /* ScrollTrigger: responsivo según device */
     const mobile = isMobile();
     const st = ScrollTrigger.create({
       trigger: panel,
+      /* containerAnimation: en desktop, relatico al hTween (scroll horizontal) */
       ...(mobile ? {} : { containerAnimation: hTween }),
-      start: mobile ? 'top 85%' : 'left 95%',
-      end:   mobile ? 'top 40%' : 'left 50%',
+      /* start/end: diferentes para desktop vs mobile */
+      start: mobile ? 'top 85%' : 'left 95%',  /* "cuando entra en viewport" */
+      end:   mobile ? 'top 40%' : 'left 50%',  /* "cuando está a mitad" */
       animation: tl,
-      scrub: mobile ? false : true,
-      toggleActions: mobile ? 'play none none none' : undefined,
-      onEnter:     () => { panel._in = true;  },
+      scrub: mobile ? false : true,  /* Smooth scrub solo en desktop */
+      toggleActions: mobile ? 'play none none none' : undefined,  /* Play on enter, mobile only */
+      onEnter:     () => { panel._in = true;  },  /* Flag para lazy loading */
       onLeaveBack: () => { panel._in = false; }
     });
     panelSTs.push(st);
@@ -181,15 +187,17 @@ function buildPanelAnimations() {
 }
 
 
-/* ────────────────────────────────────
-   PASO 5 — initToggle()
-──────────────────────────────────── */
+/* PASO 5: toggle clean ↔ rage
+
+   En la página principal (timeline), el toggle
+   necesita reconstruir TODO porque los ScrollTriggers
+   y animaciones cambian significativamente. */
 function initToggle() {
   const btn = document.getElementById('toggle-btn');
   if (!btn) return;
 
   btn.addEventListener('click', () => {
-    if (rebuilding) return;
+    if (rebuilding) return;  /* Previene clicks durante rebuild */
     rebuilding = true;
 
     const savedScrollY = window.scrollY;
@@ -198,13 +206,15 @@ function initToggle() {
     document.body.classList.toggle('clean', !isRage);
     document.body.classList.toggle('rage',   isRage);
 
+    /* Marca todos los paneles como "no vistos" para re-animar */
     panels.forEach(p => { p._in = false; });
 
+    /* Pequeño delay para que CSS transiciones terminen */
     setTimeout(() => {
-      buildScroll();
+      buildScroll();  /* Reconstruye todo */
       ScrollTrigger.refresh();
 
-      /* Restaurar posición después del refresh */
+      /* Restaura posición original */
       window.scrollTo(0, savedScrollY);
 
       rebuilding = false;
@@ -213,25 +223,26 @@ function initToggle() {
 }
 
 
-/* ────────────────────────────────────
-   PASO 6 — initDots()
-──────────────────────────────────── */
+/* PASO 6: navegación por dots (indicadores)
+
+   Click en dot → scroll a esa posición */
 function initDots() {
   dots.forEach((d, i) => {
     d.addEventListener('click', () => {
-      if (!hST || rebuilding) return;
+      if (!hST || rebuilding) return;  /* Solo en desktop + cuando no está rebuilding */
       const total  = track.scrollWidth - window.innerWidth;
       const pinTop = pin.getBoundingClientRect().top + window.scrollY;
+      /* Calcula posición basado en índice del dot */
       lenis.scrollTo(pinTop + (i / (dots.length - 1)) * total);
     });
   });
 }
 
 
-/* ────────────────────────────────────
-   PASO 7 — showPage()
-   Punto de entrada único desde countdown.js
-──────────────────────────────────── */
+/* PASO 7: PUNTO DE ENTRADA ÚNICO
+
+   Llamado desde countdown.js después del countdown.
+   Inicia todo el sistema: timeline, scroll, animaciones. */
 function showPage() {
   lenis.scrollTo(0, { immediate: true });
 
@@ -241,11 +252,12 @@ function showPage() {
 
   initRefs();
 
+  /* Marca el primer dot como activo */
   dots.forEach((d, i) => d.classList.toggle('on', i === 0));
 
   initPanels();
   buildScroll();
-  ScrollTrigger.refresh(); /* recalcula pin spacer → dispara 'refresh' → lenis.resize() */
+  ScrollTrigger.refresh();  /* Recalcula pin spacer → lenis.resize() */
   if (window.initCineIntroAnim)   window.initCineIntroAnim();
   initToggle();
   initDots();
@@ -254,15 +266,15 @@ function showPage() {
 window.showPage = showPage;
 
 
-/* ────────────────────────────────────
-   PASO 8 — Resize
-──────────────────────────────────── */
+/* PASO 8: RESIZE DETECTOR
+
+   Si cambia entre mobile/desktop, reconstruye */
 window.addEventListener('resize', () => {
   if (rebuilding) return;
   const nowMobile = isMobile();
   if (nowMobile !== _wasMobile) {
     _wasMobile = nowMobile;
-    buildScroll();
+    buildScroll();  /* Reconstruye para nuevo breakpoint */
   }
   ScrollTrigger.refresh();
 });

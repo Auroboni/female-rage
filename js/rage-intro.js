@@ -1,14 +1,15 @@
 /* ════════════════════════════════════════
-   RAGE-INTRO.JS
-   Pantalla minimalista post-countdown.
-   Se carga entre timeline.js y countdown.js,
-   envuelve window.showPage().
+   RAGE-INTRO.JS — Demostración clean↔rage
+
+   Pantalla  que muestra al usuario
+  la transición entre clean y rage mode.
 ════════════════════════════════════════ */
 
 (function () {
   const origShowPage = window.showPage;
-  let rageIntroShown = false;
+  let rageIntroShown = false;             /* Ejecuta una sola vez */
 
+  /* Intercepta showPage para insertar esta pantalla */
   window.showPage = function () {
     const intro  = document.getElementById('rage-intro');
     const phrase = document.getElementById('ri-phrase');
@@ -20,21 +21,19 @@
 
     rageIntroShown = true;
 
-    // 1 — Fade in del fondo
     intro.classList.add('ri-visible');
 
-    // 2 — Aparece la frase
     setTimeout(() => phrase.classList.add('ri-phrase-in'), 700);
 
-    // 3 — Toggle se activa: rage ON
-    //     El fondo cambia, la frase se ilumina, el toggle salta
+    /* Toggle ON — cambia a rage
+       El fondo se oscurece, la frase se ilumina con efectos */
     setTimeout(() => intro.classList.add('is-rage'), 1600);
 
-    // 4 — Toggle se desactiva: vuelve a clean
+    /* Toggle OFF — vuelve a clean
+       Este timeout simplemente remueve la clase, volviendo al estado original */
     setTimeout(() => intro.classList.remove('is-rage'), 4400);
 
-    // 5 — Fade out e iniciar siguiente fase al mismo tiempo
-    //     story-intro cubre el fondo mientras rage-intro se desvanece
+    /* Mientras rage-intro se desvanece, story-intro entra */
     setTimeout(() => {
       intro.classList.remove('ri-visible');
       origShowPage();

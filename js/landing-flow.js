@@ -1,32 +1,22 @@
-(function () {
-  const origShowPage = window.showPage;
-  let femaleRageShown = false;
+/* ════════════════════════════════════════
+   LANDING-FLOW.JS
 
-  window.showFemaleRageIntro = function () {
-    const femaleRageIntro = document.getElementById('female-rage-intro');
-    if (femaleRageIntro && !femaleRageShown && !window.skipIntro) {
-      femaleRageIntro.style.display = 'block';
-      femaleRageIntro.classList.add('visible');
-      femaleRageShown = true;
-    }
-  };
+   Orquesta el flujo:
+   Countdown → Female Rage Intro → Timeline
+════════════════════════════════════════ */
 
-  window.showPage = function () {
-    const femaleRageIntro = document.getElementById('female-rage-intro');
+const origShowPage = window.showPage;
 
-    // Si skipIntro está activo, saltar todos los intros
-    if (window.skipIntro) {
-      if (origShowPage) origShowPage();
-      return;
-    }
+/* Countdown termina y llama a esta función */
+window.showFemaleRageIntro = function () {
+  const femaleRageIntro = document.getElementById('female-rage-intro');
+  if (femaleRageIntro) {
+    femaleRageIntro.style.display = 'block';
+    femaleRageIntro.classList.add('visible');
+  }
+};
 
-    // Primera llamada desde countdown: mostrar female-rage-intro
-    if (!femaleRageShown && femaleRageIntro) {
-      window.showFemaleRageIntro();
-      return;
-    }
-
-    // Llamadas posteriores: continuar con el flujo normal
-    if (origShowPage) origShowPage();
-  };
-})();
+/* El botón de female-rage-intro llama a showPage */
+window.showPage = function () {
+  if (origShowPage) origShowPage();
+};

@@ -1,14 +1,19 @@
 /* ════════════════════════════════════════
-   FICHA.JS
-   · Datos de las 5 películas
-   · Carga dinámica por URL param (?film=)
-   · Cursor, toggle, progress bar
+   FICHA.JS 
+
+   Sistema de datos estático + carga dinámica
+   desde URL
+
+   ARQUITECTURA:
+   - FILMS: objeto con metadatos de cada película
+   - loadFilm(): carga desde URL 
+   - updateNavigation(): prev/next basado en orden
+   - navigateTo(): transición suave sin recarga
+   - Extras: cursor personalizado, rage spray, toggle
 ════════════════════════════════════════ */
 
 /* ─────────────────────────────────────
-   DATOS DE PELÍCULAS
-   hero: imagen de escena (a añadir en img/ficha/)
-   posterClean / posterRage: del catálogo
+   BASE DE DATOS: películas con metadatos
 ───────────────────────────────────── */
 const FILMS = {
 
@@ -209,13 +214,16 @@ const FILMS = {
 
 
 /* ─────────────────────────────────────
-   ORDEN Y NAVEGACIÓN ENTRE FILMS
+   ORDEN Y NAVEGACIÓN
+
+   Permite prev/next entre películas
 ───────────────────────────────────── */
 const FILM_ORDER = [
   'pearl', 'killbill', 'furiosa', 'sweetpea', 'substance',
   'handmaid', 'arcane', 'promising'
 ];
 
+/* NAVIGATION: actualiza botones prev/next basado en posición en FILM_ORDER */
 function updateNavigation(id) {
   const idx       = FILM_ORDER.indexOf(id);
   const prevId    = FILM_ORDER[idx - 1] || null;
@@ -225,26 +233,27 @@ function updateNavigation(id) {
   const prevTitle = document.getElementById('prev-title');
   const nextTitle = document.getElementById('next-title');
 
+  /* Botón PREV */
   if (prevBtn) {
-    prevBtn.classList.toggle('vis', !!prevId);
+    prevBtn.classList.toggle('vis', !!prevId);  // Visible solo si hay película anterior
     if (prevTitle) prevTitle.textContent = prevId ? (FILMS[prevId]?.title || '') : '';
     prevBtn.onclick = prevId ? () => navigateTo(prevId) : null;
   }
+  /* Botón NEXT */
   if (nextBtn) {
-    nextBtn.classList.toggle('vis', !!nextId);
+    nextBtn.classList.toggle('vis', !!nextId);  // Visible solo si hay película siguiente
     if (nextTitle) nextTitle.textContent = nextId ? (FILMS[nextId]?.title || '') : '';
     nextBtn.onclick = nextId ? () => navigateTo(nextId) : null;
   }
 }
 
-/* Transición suave sin recarga de página */
 function navigateTo(id) {
   gsap.to('main', {
     opacity: 0, y: -8, duration: .22, ease: 'power2.in',
     onComplete() {
-      history.pushState(null, '', `ficha.html?film=${id}`);
+      history.pushState(null, '', `ficha.html?film=${id}`); 
       window.scrollTo(0, 0);
-      loadFilm();
+      loadFilm();  /* Carga nueva película */
       gsap.fromTo('main',
         { opacity: 0, y: 10 },
         { opacity: 1, y: 0, duration: .32, ease: 'power2.out' }
@@ -255,12 +264,13 @@ function navigateTo(id) {
 
 
 /* ─────────────────────────────────────
-   CARGA DEL FILM DESDE URL PARAM
+  Carga la información de la película a través de los metadatos
 ───────────────────────────────────── */
 function loadFilm() {
   const id   = new URLSearchParams(window.location.search).get('film');
   const film = FILMS[id];
 
+  /* ERROR: película no existe */
   if (!film) {
     document.title = 'HISTERIA — Película no encontrada';
     return;
@@ -268,25 +278,24 @@ function loadFilm() {
 
   document.title = `HISTERIA — ${film.title}`;
 
-  /* Eyebrow */
   const eyebrow = document.getElementById('ficha-eyebrow');
   if (eyebrow) eyebrow.textContent = film.eyebrow;
 
-  /* Título */
+  /* TÍTULO */
   const title = document.getElementById('ficha-title');
   if (title) title.textContent = film.title.toUpperCase();
 
-  /* Sinopsis */
+  /* SINOPSIS: dos párrafos */
   const body = document.getElementById('ficha-body');
   if (body) body.innerHTML = film.sinopsis.map(p => `<p>${p}</p>`).join('');
 
-  /* Quote */
+  /* QUOTE: cita + nota */
   const quote = document.getElementById('ficha-quote');
   if (quote && film.quote) {
     quote.innerHTML = `${film.quote.text}<cite>→ ${film.quote.note}</cite>`;
   }
 
-  /* Ficha técnica */
+  /* FICHA TÉCNICA */
   const dl = document.getElementById('ficha-dl');
   if (dl) {
     dl.innerHTML = film.tecnica
@@ -294,76 +303,18 @@ function loadFilm() {
       .join('');
   }
 
-  /* Pósters */
+  /* PÓSTERS: clean + rage */
   const pc = document.getElementById('ficha-poster-clean');
   const pr = document.getElementById('ficha-poster-rage');
   if (pc) { pc.src = film.posterClean; pc.alt = `${film.title} — póster`; }
   if (pr) { pr.src = film.posterRage;  pr.alt = `${film.title} — versión rage`; }
 
-  /* Actualizar flechas según posición en el orden */
   updateNavigation(id);
 }
 
 
 /* ─────────────────────────────────────
-   CURSOR
-───────────────────────────────────── */
-const cur = document.getElementById('cur');
-
-document.addEventListener('mousemove', e => {
-  gsap.to(cur, { x: e.clientX, y: e.clientY, duration: .1, ease: 'power2.out' });
-  if (document.body.classList.contains('rage')) _spray(e.clientX, e.clientY);
-});
-document.addEventListener('mouseover', e => {
-  if (e.target.closest('a, button')) cur.classList.add('big');
-});
-document.addEventListener('mouseout', e => {
-  if (e.target.closest('a, button')) cur.classList.remove('big');
-});
-
-
-/* ─────────────────────────────────────
-   RAGE SPRAY
-───────────────────────────────────── */
-const _SPRAY = ['#D81E5B', '#D4FF00', '#02E1FF', '#454ADE'];
-let _si = 0, _st = 0;
-
-function _spray(x, y) {
-  const now = performance.now();
-  if (now - _st < 40) return;
-  _st = now;
-
-  for (let i = 0; i < 3; i++) {
-    const el    = document.createElement('div');
-    const color = _SPRAY[_si++ % 4];
-    const angle = Math.random() * Math.PI * 2;
-    const r     = 5 + Math.random() * 10;
-    const s     = 2 + Math.random() * 2.5;
-
-    Object.assign(el.style, {
-      position: 'fixed', width: s + 'px', height: s + 'px',
-      borderRadius: '50%', pointerEvents: 'none', zIndex: '9998',
-      background: color, boxShadow: `0 0 ${Math.round(s * 2)}px ${color}`,
-      left: (x + Math.cos(angle) * r - s / 2) + 'px',
-      top:  (y + Math.sin(angle) * r - s / 2) + 'px',
-    });
-    document.body.appendChild(el);
-
-    gsap.to(el, {
-      opacity: 0,
-      x: Math.cos(angle) * (6 + Math.random() * 10),
-      y: Math.sin(angle) * (6 + Math.random() * 10),
-      scale: 0,
-      duration: .3 + Math.random() * .15,
-      ease: 'power2.out',
-      onComplete() { el.remove(); }
-    });
-  }
-}
-
-
-/* ─────────────────────────────────────
-   PROGRESS BAR
+   PROGRESS BAR: barra superior que indica scroll
 ───────────────────────────────────── */
 window.addEventListener('scroll', () => {
   const total = document.body.scrollHeight - window.innerHeight;
@@ -374,15 +325,16 @@ window.addEventListener('scroll', () => {
 
 /* ─────────────────────────────────────
    TOGGLE CLEAN ↔ RAGE
-   Versión simplificada: sin ScrollTrigger.
-   Solo swap de clase + flash.
+
+   Simplificado para ficha (sin ScrollTrigger):
+   - Click alterna clases clean/rage
+   - Flash visual para feedback
 ───────────────────────────────────── */
 (function initToggle() {
   const btn  = document.getElementById('toggle-btn');
   const wrap = document.getElementById('toggle-wrap');
   if (!btn) return;
 
-  /* Siempre visible en la ficha (no hay countdown) */
   if (wrap) wrap.classList.add('vis');
 
   let isRage = false;
@@ -401,14 +353,18 @@ window.addEventListener('scroll', () => {
 
 
 /* ─────────────────────────────────────
-   INIT
+   INICIALIZACIÓN: carga película y anima entrada
 ───────────────────────────────────── */
 
-/* Evita que el navegador restaure la posición de scroll de la página anterior */
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
-loadFilm();
+loadFilm(); 
 
-/* Animación de entrada al cargar la página */
-gsap.from('main', { opacity: 0, y: 12, duration: .45, ease: 'power2.out', delay: .1 });
+gsap.from('main', {
+  opacity: 0,
+  y: 12,
+  duration: .45,
+  ease: 'power2.out',
+  delay: .1
+});

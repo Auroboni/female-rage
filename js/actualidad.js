@@ -1,11 +1,19 @@
 /* ════════════════════════════════════════
-   ACTUALIDAD.JS — #actualidad
-   Carga animaciones solo cuando la sección es visible
+   ACTUALIDAD.JS 
+
+   Lazy loading: solo ejecuta animaciones cuando
+   la sección entra en viewport (daba error al activar/desactivar rage).
+
+   ARQUITECTURA:
+   - Split text: título dividido en letras
+   - Typing effect: solo en desktop
+   - Selection loop: efecto de selección flotante
+   - Timeline: GSAP + ScrollTrigger
 ════════════════════════════════════════ */
 
 let actualidadInitialized = false;
 
-/* Ocultar elementos inicialmente */
+/* LAZY LOAD: Espera a que la sección sea visible */
 document.addEventListener('DOMContentLoaded', () => {
   const section = document.getElementById('actualidad');
   if (!section) return;
@@ -14,21 +22,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const subtitleEl = section.querySelector('.pqa-subtitle');
   const paras = section.querySelectorAll('.pqa-body p');
 
+  /* Estado inicial: todos los elementos invisibles */
   gsap.set([imgWrap, subtitleEl, ...paras], { opacity: 0 });
 
-  /* Intersection Observer: cargar solo cuando la sección es visible */
+  /* Intersection Observer: ejecuta cuando entra en viewport */
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !actualidadInitialized) {
         window.initActualidadAnim();
-        observer.unobserve(section);
+        observer.unobserve(section);  // Ejecuta una sola vez
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.1 });  /* Dispara cuando 10% es visible */
 
   observer.observe(section);
 });
 
+/* INICIALIZACIÓN: Se ejecuta al entrar en viewport */
 window.initActualidadAnim = function () {
   const section    = document.getElementById('actualidad');
   if (!section || actualidadInitialized) return;
@@ -40,9 +50,9 @@ window.initActualidadAnim = function () {
   const subtitleEl = section.querySelector('.pqa-subtitle');
   const paras      = section.querySelectorAll('.pqa-body p');
 
-  /* ── Split título en letras individuales ── */
+  /* SPLIT TÍTULO: cada letra en su propio <span> */
   const rawText = titleEl.textContent.trim();
-  titleEl.setAttribute('aria-label', rawText);
+  titleEl.setAttribute('aria-label', rawText); 
   titleEl.innerHTML = rawText
     .split('')
     .map(ch => ch === ' '
@@ -51,13 +61,13 @@ window.initActualidadAnim = function () {
     .join('');
   const chars = titleEl.querySelectorAll('.char');
 
-  /* Establecer estado inicial para animar */
-  gsap.set(chars, { opacity: 0, y: 60 });
-  gsap.set(imgWrap, { opacity: 0, y: 20 });
-  gsap.set(subtitleEl, { opacity: 0, y: 16 });
-  gsap.set(paras, { opacity: 0, y: 28 });
+  /* ESTADO INICIAL: elementos invisibles, desplazados hacia abajo */
+  gsap.set(chars, { opacity: 0, y: 60 });      // Letras del título
+  gsap.set(imgWrap, { opacity: 0, y: 20 });    // Imagen
+  gsap.set(subtitleEl, { opacity: 0, y: 16 }); // Subtítulo
+  gsap.set(paras, { opacity: 0, y: 28 });      // Párrafos
 
-  /* ── Split .pqa-highlight en spans por letra para efecto selección ── */
+  /* SPLIT HIGHLIGHT: efecto selección del mouse para resaltar el texto */
   const highlightEl = section.querySelector('.pqa-highlight');
   const hlChars = [];
   if (highlightEl) {
@@ -74,22 +84,22 @@ window.initActualidadAnim = function () {
     });
   }
 
-  /* ── Timeline única ── */
+  /* TIMELINE: secuencia de animaciones sincronizadas con scroll */
   const tl = gsap.timeline({
     scrollTrigger: { trigger: section, start: 'top 72%' },
     onComplete: () => { if (hlChars.length) startSelectionLoop(); }
   });
 
-  /* 1. Letras del título — suben suavemente una tras otra */
+  /* FASE 1: Letras del título — suben con stagger */
   tl.to(chars, {
     y: 0,
     opacity: 1,
     duration: 1.8,
-    stagger: 0.055,
+    stagger: 0.055,  /* Retraso de 55ms entre letra y letra */
     ease: 'expo.out',
   });
 
-  /* 2. Imagen — fade con ligero movimiento vertical */
+  /* FASE 2: Imagen — fade + movimiento vertical suave */
   tl.to(imgWrap, {
     opacity: 1,
     y: 0,
@@ -98,7 +108,9 @@ window.initActualidadAnim = function () {
     ease: 'expo.out',
   }, '+=0.2');
 
-  /* 3. Subtítulo: typing en desktop (60ms/char), fade en mobile */
+  /* FASE 3: Subtítulo — responsive
+     Desktop: efecto de typing (60ms/char)
+     Mobile: fade normal */
   if (window.innerWidth > 768) {
     const fullText = subtitleEl.textContent.trim();
     subtitleEl.textContent = '';
@@ -111,7 +123,7 @@ window.initActualidadAnim = function () {
         subtitleEl.textContent = fullText.slice(0, ++i);
         if (i >= fullText.length) clearInterval(tick);
       }, 60);
-    }, '-=0.5');
+    }, '-=0.3');
   } else {
     tl.to(subtitleEl, {
       opacity: 1,
@@ -122,34 +134,31 @@ window.initActualidadAnim = function () {
     }, '-=1.8');
   }
 
-  /* 4. Párrafos */
+  /* FASE 4: Párrafos — fade con stagger */
   tl.to(paras, {
     opacity: 1,
     y: 0,
     duration: 1.6,
     stagger: 0.045,
     ease: 'expo.out',
-  }, '+=0.3');
+  }, '+=0.2');
 
-  /* ── Animación de selección letra a letra en loop ── */
+  /* SELECTION LOOP: loop del efecto highlight */
   function startSelectionLoop() {
     function runCycle() {
       const cycleTl = gsap.timeline({
-        onComplete: () => setTimeout(runCycle, 2000)
+        onComplete: () => setTimeout(runCycle, 2000)  /* Repite cada 2s */
       });
 
-      /* Seleccionar: snap instantáneo por letra, como el cursor arrastrando */
       cycleTl.to(hlChars, {
         backgroundColor: 'rgb(216, 30, 92)',
-        color:'white',
+        color: 'white',
         duration: 0,
         stagger: 0.04,
       });
 
-      /* Mantener seleccionado */
       cycleTl.to({}, { duration: 0.9 });
 
-      /* Deseleccionar: snap instantáneo, como hacer click en otro sitio */
       cycleTl.set(hlChars, { backgroundColor: 'transparent' });
     }
 

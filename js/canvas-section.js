@@ -1,11 +1,22 @@
 /* ════════════════════════════════════════
-   CANVAS SECTION
-   Interacción final: escribe y rompe palabras
+   CANVAS SECTION 
+
+   Esta sección crea una experiencia interactiva
+   donde los usuarios escriben palabras y las ven
+   "romperse".
+
+   ARQUITECTURA:
+   - CONFIG: constantes de IDs y tiempos de animación
+   - sketch (p5): motor gráfico principal
+   - Event listeners: entrada de usuario (input, botones)
+   - Historia: registro de palabras rotas
+   - Física: partículas, grietas, polvo animados
 ════════════════════════════════════════ */
 
 (function () {
   'use strict';
 
+  /* CONFIG: IDs de elementos HTML y timing de animaciones */
   const CONFIG = {
     W: 720,
     H: 360,
@@ -17,30 +28,35 @@
     SPD_VAL_ID: 'canvas-val-spd',
     COL_BTN_CLASS: 'canvas-col-btn',
     HIST_TAG_CLASS: 'canvas-hist-tag',
-    SHOW_FADE_IN: 25,
-    SHOW_HOLD: 50,
-    SHOW_SHAKE: 75,
-    SHOW_BREAK: 95,
-    HISTORY_DISSOLVE_MS: 3500,
+    /* Fases de animación*/
+    SHOW_FADE_IN: 25,        // La palabra aparece
+    SHOW_HOLD: 50,           // La palabra está visible
+    SHOW_SHAKE: 75,          // Tiembla
+    SHOW_BREAK: 95,          // Explota
+    HISTORY_DISSOLVE_MS: 3500, // Palabra se desvanece en historial
   };
-//Las variables que se modifican
-  let userCol = '#D81E5B';
-  let userSpd = 6;
-  let wordHistory = [];
+
+  /* ESTADO GLOBAL (sin personalizar) */
+  let userCol = '#D81E5B';  // Color de la palabra y efectos
+  let userSpd = 6;          // Intensidad de la explosión (1-10)
+  let wordHistory = [];     // Registro de palabras rotas
 
   const sketch = (p) => {
-    let shards = [];
+    /* Elementos de la explosión */
+    let shards = []; 
     let polvo = [];
     let flashes = [];
     let cracks = [];
     let wordCracks = [];
 
-    let phase = 'idle';
+    /* Control de fase: idle → showing → cracking → breaking */
+    let phase = 'idle';      //pantalla vacía
     let currentWord = '';
-    let showTimer = 0;
-    let crackTimer = 0;
-    let wordAlpha = 0;
+    let showTimer = 0;      
+    let crackTimer = 0;     
+    let wordAlpha = 0;     
 
+    /* SETUP: inicializa canvas responsive */
     p.setup = () => {
       const container = document.getElementById(CONFIG.CANVAS_PARENT);
       const w = container ? container.clientWidth : CONFIG.W;
@@ -62,6 +78,7 @@
       }
     };
 
+    /* Fase 1: muestra la palabra */
     function startWord(txt) {
       phase = 'showing';
       currentWord = txt.toUpperCase();
@@ -72,9 +89,10 @@
       polvo = [];
       flashes = [];
       cracks = [];
-      setInputEnabled(false);
+      setInputEnabled(false);  // Bloquea input durante animación
     }
 
+    /* Fase 2: grietas aparecen en la palabra */
     function startCracking() {
       phase = 'cracking';
       crackTimer = 0;
@@ -99,6 +117,7 @@
       }
     }
 
+    /* Fase 3: la palabra explota en fragmentos */
     function breakWord() {
       phase = 'breaking';
       const cx = p.width / 2;
@@ -180,17 +199,19 @@
       addToHistory(currentWord);
     }
 
+    /* DRAW LOOP: renderiza cada frame */
     p.draw = () => {
       p.background(10, 10, 10, 250);
 
-      drawIdleMessage();
-      drawWord();
-      drawWordCracks();
-      drawFlashes();
-      drawFinalCracks();
-      drawShards();
-      drawpolvo();
-      checkBreakDone();
+      /* Renderizar en orden: desde atrás hacia adelante */
+      drawIdleMessage();              // Mensaje inicial "RÓMPELO"
+      drawWord();                     // Palabra con fade-in y shake
+      drawWordCracks();               // Grietas que aparecen en la palabra
+      drawFlashes();                  // Flash de luz central
+      drawFinalCracks();              // Grietas que se propagan
+      drawShards();                   // Fragmentos sólidos
+      drawpolvo();                    // Polvo flotante
+      checkBreakDone();               // Verifica si termina la animación
     };
 
     function drawIdleMessage() {
@@ -225,7 +246,7 @@
       }
 
       p.textAlign(p.CENTER, p.CENTER);
-      /* Tamaño de fuente responsivo basado en ancho disponible */
+      /* Tamaño de fuente responsive basado en ancho disponible */
       const maxWidth = p.width * 0.85;
       const baseSize = p.map(p.width, 280, 720, 24, 80);
       const fs = Math.max(16, Math.min(baseSize, maxWidth / (currentWord.length * 0.65)));
@@ -344,6 +365,7 @@
     };
   };
 
+  /* HISTORIAL: registra palabras rotas */
   function addToHistory(word) {
     wordHistory.push(word);
     const hist = document.getElementById(CONFIG.HISTORY_ID);
@@ -352,6 +374,7 @@
     tag.className = CONFIG.HIST_TAG_CLASS;
     tag.textContent = word;
     hist.appendChild(tag);
+    /* Aplica clase 'dissolved' para transición CSS */
     setTimeout(() => tag.classList.add('dissolved'), CONFIG.HISTORY_DISSOLVE_MS);
   }
 
@@ -374,6 +397,8 @@
     inp.value = '';
   }
 
+  /* INICIALIZACIÓN: configura p5.js y event listeners
+     Ejecuta después de que el DOM está listo */
   function initSketch() {
     let sketchRef = null;
     new p5((p) => {
@@ -393,6 +418,7 @@
       btn.addEventListener('click', () => fire(sketchRef));
     }
 
+    /* SLIDER: controla la intensidad (1-10) */
     const spdSlider = document.getElementById(CONFIG.SPD_ID);
     if (spdSlider) {
       spdSlider.addEventListener('input', function () {
@@ -402,6 +428,7 @@
       });
     }
 
+    /* COLORES: botones para cambiar color de explosión */
     document.querySelectorAll('.' + CONFIG.COL_BTN_CLASS).forEach((btn) => {
       btn.addEventListener('click', function () {
         document.querySelectorAll('.' + CONFIG.COL_BTN_CLASS)
