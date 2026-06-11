@@ -57,3 +57,12 @@ lenis.on('scroll', ({ scroll, limit }) => {
   const prog = document.getElementById('prog');
   if (prog) prog.style.width = pct + '%';
 });
+
+/* Recalcula cuando vuelves a la página */
+window.addEventListener('pageshow', () => {
+  setTimeout(() => {
+    lenis.resize();
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    if (window.dispatchEvent) window.dispatchEvent(new Event('resize'));
+  }, 200);
+});
