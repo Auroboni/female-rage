@@ -1,29 +1,40 @@
 /* ════════════════════════════════════════
    CINE-INTRO.JS — sección de transición
 
-   Efecto: mientras hace scroll, la palabra se
-   desliza horizontalmente (slide-out)
-
-   ARQUITECTURA:
-   - ScrollTrigger: vinculado al scroll
-   - scrub: true — anima en sincronía con scroll
-   - xPercent: desliza horizontalmente (-100% = salida)
+   Detección basada en scroll sin ScrollTrigger
 ════════════════════════════════════════ */
 
+let cineAnimated = false;
+
 window.initCineIntroAnim = function () {
-  const wrap    = document.querySelector('.cine-wrap');
+  const wrap = document.querySelector('.cine-wrap');
   const section = document.getElementById('cine-intro');
   if (!wrap || !section) return;
 
-  gsap.to(section, {
-    xPercent: -100,
-    opacity: 0,
-    scrollTrigger: {
-      trigger: wrap,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-      markers: false
-    }
-  });
+  if (cineAnimated) return;
+  cineAnimated = true;
+
+  /* Anima basado en scroll dentro del wrap */
+  if (window.lenis) {
+    window.lenis.on('scroll', ({ scroll }) => {
+      const rect = wrap.getBoundingClientRect();
+      const wrapTop = scroll + rect.top;
+      const scrollPercent = Math.max(0, Math.min(1, (scroll - wrapTop) / window.innerHeight));
+
+      gsap.set(section, {
+        xPercent: -100 * scrollPercent,
+        opacity: 1 - scrollPercent
+      });
+    });
+  }
 };
+
+/* Ejecuta cuando Lenis esté listo */
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.lenis) {
+    window.initCineIntroAnim();
+  } else {
+    /* Espera a que Lenis se cargue (desde main.js) */
+    setTimeout(window.initCineIntroAnim, 500);
+  }
+});
