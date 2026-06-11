@@ -39,7 +39,7 @@ gsap.timeline({ delay: .4 })
 /* LENIS: smooth scroll global
    Integrado con GSAP ScrollTrigger */
 const lenis = new Lenis({
-  duration: 1.2,
+  duration: 1.8,
   easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   smoothWheel: true
 });

@@ -1,58 +1,38 @@
 /* ════════════════════════════════════════
-   ACTUALIDAD.JS 
+   ACTUALIDAD.JS
 
-   Lazy loading: solo ejecuta animaciones cuando
-   la sección entra en viewport (daba error al activar/desactivar rage).
-
-   ARQUITECTURA:
-   - Split text: título dividido en letras
-   - Typing effect: solo en desktop
-   - Selection loop: efecto de selección flotante
-   - Timeline: GSAP + ScrollTrigger
+   Animaciones rápidas cuando entra en viewport
+   - Título: split text animado
+   - Imagen: fade rápido
+   - Subtítulo: typing effect
+   - Párrafos: fade con stagger
 ════════════════════════════════════════ */
 
 let actualidadInitialized = false;
 
-/* LAZY LOAD: Espera a que la sección sea visible */
-document.addEventListener('DOMContentLoaded', () => {
+const actualidadObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.target.id === 'actualidad' && entry.isIntersecting && !actualidadInitialized) {
+      actualidadInitialized = true;
+      window.initActualidadAnim();
+      actualidadObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+window.initActualidadAnim = function () {
   const section = document.getElementById('actualidad');
   if (!section) return;
 
+  const titleEl = section.querySelector('.pqa-title');
   const imgWrap = section.querySelector('.pqa-img-wrap');
   const subtitleEl = section.querySelector('.pqa-subtitle');
   const paras = section.querySelectorAll('.pqa-body p');
+  const highlightEl = section.querySelector('.pqa-highlight');
 
-  /* Estado inicial: todos los elementos invisibles */
-  gsap.set([imgWrap, subtitleEl, ...paras], { opacity: 0 });
-
-  /* Intersection Observer: ejecuta cuando entra en viewport */
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !actualidadInitialized) {
-        window.initActualidadAnim();
-        observer.unobserve(section);  // Ejecuta una sola vez
-      }
-    });
-  }, { threshold: 0.1 });  /* Dispara cuando 10% es visible */
-
-  observer.observe(section);
-});
-
-/* INICIALIZACIÓN: Se ejecuta al entrar en viewport */
-window.initActualidadAnim = function () {
-  const section    = document.getElementById('actualidad');
-  if (!section || actualidadInitialized) return;
-
-  actualidadInitialized = true;
-
-  const titleEl    = section.querySelector('.pqa-title');
-  const imgWrap    = section.querySelector('.pqa-img-wrap');
-  const subtitleEl = section.querySelector('.pqa-subtitle');
-  const paras      = section.querySelectorAll('.pqa-body p');
-
-  /* SPLIT TÍTULO: cada letra en su propio <span> */
+  /* SPLIT TÍTULO */
   const rawText = titleEl.textContent.trim();
-  titleEl.setAttribute('aria-label', rawText); 
+  titleEl.setAttribute('aria-label', rawText);
   titleEl.innerHTML = rawText
     .split('')
     .map(ch => ch === ' '
@@ -61,14 +41,7 @@ window.initActualidadAnim = function () {
     .join('');
   const chars = titleEl.querySelectorAll('.char');
 
-  /* ESTADO INICIAL: elementos invisibles, desplazados hacia abajo */
-  gsap.set(chars, { opacity: 0, y: 60 });      // Letras del título
-  gsap.set(imgWrap, { opacity: 0, y: 20 });    // Imagen
-  gsap.set(subtitleEl, { opacity: 0, y: 16 }); // Subtítulo
-  gsap.set(paras, { opacity: 0, y: 28 });      // Párrafos
-
-  /* SPLIT HIGHLIGHT: efecto selección del mouse para resaltar el texto */
-  const highlightEl = section.querySelector('.pqa-highlight');
+  /* SPLIT HIGHLIGHT */
   const hlChars = [];
   if (highlightEl) {
     [...highlightEl.childNodes].forEach(node => {
@@ -84,84 +57,59 @@ window.initActualidadAnim = function () {
     });
   }
 
-  /* TIMELINE: secuencia de animaciones sincronizadas con scroll */
-  const tl = gsap.timeline({
-    scrollTrigger: { trigger: section, start: 'top 72%' },
-    onComplete: () => { if (hlChars.length) startSelectionLoop(); }
-  });
+  const tl = gsap.timeline({ onComplete: () => { if (hlChars.length) startSelectionLoop(); } });
 
-  /* FASE 1: Letras del título — suben con stagger */
-  tl.to(chars, {
-    y: 0,
-    opacity: 1,
-    duration: 1.8,
-    stagger: 0.055,  /* Retraso de 55ms entre letra y letra */
-    ease: 'expo.out',
-  });
+  /* Título — rápido */
+  tl.fromTo(chars,
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 0.7, stagger: 0.03, ease: 'power2.out' }
+  );
 
-  /* FASE 2: Imagen — fade + movimiento vertical suave */
-  tl.to(imgWrap, {
-    opacity: 1,
-    y: 0,
-    duration: 2.5,
-    stagger: 0.055,
-    ease: 'expo.out',
-  }, '+=0.2');
+  /* Imagen — muy rápido */
+  tl.fromTo(imgWrap,
+    { opacity: 0, y: 15 },
+    { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
+    '-=0.3'
+  );
 
-  /* FASE 3: Subtítulo — responsive
-     Desktop: efecto de typing (60ms/char)
-     Mobile: fade normal */
+  /* Subtítulo — typing rápido */
   if (window.innerWidth > 768) {
     const fullText = subtitleEl.textContent.trim();
     subtitleEl.textContent = '';
     subtitleEl.setAttribute('aria-label', fullText);
-
-    tl.to(subtitleEl, { opacity: 1, duration: 0.5 }, '-=1.8');
     tl.add(() => {
       let i = 0;
       const tick = setInterval(() => {
         subtitleEl.textContent = fullText.slice(0, ++i);
         if (i >= fullText.length) clearInterval(tick);
-      }, 60);
-    }, '-=0.3');
+      }, 35);
+    });
   } else {
-    tl.to(subtitleEl, {
-      opacity: 1,
-      y: 0,
-      duration: 1.2,
-      stagger: 0.055,
-      ease: 'expo.out',
-    }, '-=1.8');
+    tl.fromTo(subtitleEl,
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }
+    );
   }
 
-  /* FASE 4: Párrafos — fade con stagger */
-  tl.to(paras, {
-    opacity: 1,
-    y: 0,
-    duration: 1.6,
-    stagger: 0.045,
-    ease: 'expo.out',
-  }, '+=0.2');
+  /* Párrafos — rápido */
+  tl.fromTo(paras,
+    { opacity: 0, y: 15 },
+    { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out' },
+    '-=0.2'
+  );
 
-  /* SELECTION LOOP: loop del efecto highlight */
   function startSelectionLoop() {
     function runCycle() {
-      const cycleTl = gsap.timeline({
-        onComplete: () => setTimeout(runCycle, 2000)  /* Repite cada 2s */
-      });
-
-      cycleTl.to(hlChars, {
-        backgroundColor: 'rgb(216, 30, 92)',
-        color: 'white',
-        duration: 0,
-        stagger: 0.04,
-      });
-
-      cycleTl.to({}, { duration: 0.9 });
-
+      const cycleTl = gsap.timeline({ onComplete: () => setTimeout(runCycle, 2000) });
+      cycleTl.to(hlChars, { backgroundColor: 'rgb(216, 30, 92)', color: 'white', duration: 0, stagger: 0.02 });
+      cycleTl.to({}, { duration: 0.7 });
       cycleTl.set(hlChars, { backgroundColor: 'transparent' });
     }
-
-    setTimeout(runCycle, 600);
+    setTimeout(runCycle, 400);
   }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  const section = document.getElementById('actualidad');
+  if (section) actualidadObserver.observe(section);
+});
